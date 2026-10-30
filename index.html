@@ -1,0 +1,310 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Zeus im Farmhaus · Griechisches Restaurant in Lienen</title>
+<meta name="description" content="Griechische Küche im historischen Fachwerkhaus von 1650. Zum Teich 1, 49536 Lienen. Mittwoch–Montag 17:30–23:00 Uhr, Dienstag Ruhetag.">
+<meta property="og:image" content="img/farmhaus.jpg">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{--ivory:#FAF8F3;--paper:#F3EFE6;--ink:#1E232D;--muted:#6B6F78;--line:#E3DED3;--green:#E5F7AF;--olive:#5E7039;--navy:#263149}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:Inter,system-ui,sans-serif;font-weight:300;font-size:16px;color:var(--ink);background:var(--ivory);line-height:1.75;-webkit-font-smoothing:antialiased}
+img{max-width:100%;display:block}
+a{color:inherit}
+.serif,h1,h2,h3{font-family:"Cormorant Garamond",Georgia,serif;font-weight:400;letter-spacing:-.005em;line-height:1.08}
+.eyebrow{font-size:.72rem;letter-spacing:.32em;text-transform:uppercase;color:var(--olive);font-weight:500;display:inline-flex;align-items:center;gap:.9rem}
+.eyebrow::before{content:"";width:28px;height:1px;background:currentColor}
+.wrap{max-width:1180px;margin:0 auto;padding:0 28px}
+section{padding:140px 0}
+h2{font-size:clamp(2.4rem,4.6vw,3.8rem);margin:1.1rem 0 1.6rem}
+h2 em{font-style:italic;color:var(--olive)}
+p.lead{font-size:1.08rem;color:#3d424c;max-width:34em}
+.btn{display:inline-flex;align-items:center;gap:.6rem;padding:1rem 1.9rem;font-size:.78rem;letter-spacing:.2em;text-transform:uppercase;text-decoration:none;font-weight:500;border:1px solid currentColor;transition:.35s}
+.btn.solid{background:var(--ink);color:var(--ivory);border-color:var(--ink)}
+.btn.solid:hover{background:var(--olive);border-color:var(--olive)}
+.btn.light{color:#fff;border-color:#ffffffb0}.btn.light:hover{background:#fff;color:var(--ink)}
+.btn.green{background:var(--green);color:var(--ink);border-color:var(--green)}.btn.green:hover{background:#fff;border-color:#fff}
+/* intro doors */
+#doors{position:fixed;inset:0;z-index:100;display:flex;pointer-events:none}
+#doors .leaf{flex:1;background:var(--ivory);transition:transform 1.5s cubic-bezier(.77,0,.18,1);position:relative}
+#doors .leaf::after{content:"";position:absolute;top:0;bottom:0;width:1px;background:var(--line)}
+#doors .l::after{right:0}#doors .r::after{left:0}
+#doors .mark{position:absolute;inset:0;display:grid;place-items:center;text-align:center;transition:opacity .6s}
+#doors .mark div{font-family:"Cormorant Garamond",serif;font-size:clamp(2.2rem,6vw,3.6rem);color:var(--ink)}
+#doors .mark small{display:block;font-family:Inter;font-size:.7rem;letter-spacing:.4em;color:var(--olive);margin-top:.6rem;text-transform:uppercase}
+#doors.open .l{transform:translateX(-101%)}#doors.open .r{transform:translateX(101%)}#doors.open .mark{opacity:0}
+/* header */
+header.top{position:fixed;top:0;left:0;right:0;z-index:50;transition:.4s;color:#fff}
+header.top.solid{background:#FAF8F3f2;backdrop-filter:blur(10px);color:var(--ink);box-shadow:0 1px 0 var(--line)}
+.bar{display:flex;align-items:center;justify-content:space-between;height:84px;gap:2rem}
+.logo{font-family:"Cormorant Garamond",serif;font-size:1.65rem;text-decoration:none;white-space:nowrap}
+.logo i{font-style:italic;opacity:.75}
+.menu-links{display:flex;gap:2.2rem;font-size:.74rem;letter-spacing:.2em;text-transform:uppercase}
+.menu-links a{text-decoration:none;opacity:.85;padding:.3rem 0;border-bottom:1px solid transparent}.menu-links a:hover{opacity:1;border-color:currentColor}
+.bar .btn{padding:.75rem 1.3rem}
+header.top:not(.solid) .bar .btn{color:#fff;border-color:#ffffff90}
+.burger{display:none;background:none;border:0;color:inherit;width:44px;height:44px;cursor:pointer}
+.burger span{display:block;height:1px;background:currentColor;margin:7px 8px}
+@media(max-width:1020px){.menu-links,.bar .btn{display:none}.burger{display:block}
+ .menu-links.show{display:flex;position:fixed;inset:84px 0 auto 0;background:var(--ivory);color:var(--ink);flex-direction:column;gap:0;padding:1rem 28px 2rem;box-shadow:0 20px 40px #0001}
+ .menu-links.show a{padding:1rem 0;border-bottom:1px solid var(--line);font-size:.85rem}}
+/* hero */
+.hero{position:relative;height:100svh;min-height:620px;color:#fff;display:flex;align-items:flex-end;overflow:hidden}
+.hero img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 40%;transform:scale(1.08);transition:transform 2.6s cubic-bezier(.2,.7,.2,1)}
+body.ready .hero img{transform:scale(1)}
+.hero::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,#0b0f1a80 0%,#0b0f1a00 22%,#0b0f1a20 45%,#0b0f1ae6 100%),linear-gradient(90deg,#0b0f1a99 0%,#0b0f1a00 60%)}
+.hero .wrap{position:relative;z-index:2;width:100%;padding-bottom:9vh}
+.hero .eyebrow{color:var(--green)}
+.hero h1{font-size:clamp(3.2rem,9vw,7.6rem);font-weight:400;margin:1rem 0 1.2rem}
+.hero h1 em{font-style:italic;font-weight:400}
+.hero p{max-width:34em;font-size:1.08rem;color:#ffffffe0;margin-bottom:2.2rem}
+.hero .actions{display:flex;gap:1rem;flex-wrap:wrap}
+.hero .facts{position:absolute;right:28px;bottom:9vh;z-index:2;text-align:right;font-size:.78rem;letter-spacing:.14em;text-transform:uppercase;line-height:2;color:#ffffffd0}
+.credit{position:absolute;right:12px;top:96px;z-index:2;font-size:.62rem;color:#ffffff99;writing-mode:vertical-rl}
+@media(max-width:860px){.hero .facts{display:none}.hero img{object-position:42% 40%}}
+/* intro strip */
+.strip{background:var(--ink);color:#d8dbe2;padding:26px 0;font-size:.78rem;letter-spacing:.18em;text-transform:uppercase}
+.strip .wrap{display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap}
+.strip b{color:var(--green);font-weight:500}
+/* story */
+.two{display:grid;grid-template-columns:1.05fr 1fr;gap:96px;align-items:center}
+.frame{position:relative}
+.frame img{aspect-ratio:4/5;object-fit:cover;width:100%}
+.frame::before{content:"";position:absolute;inset:-18px 18px 18px -18px;border:1px solid var(--olive);opacity:.35;z-index:-1}
+.facts3{display:grid;grid-template-columns:repeat(3,1fr);margin-top:3rem;border-top:1px solid var(--line)}
+.facts3 div{padding:1.6rem 1rem 0 0}
+.facts3 b{display:block;font-family:"Cormorant Garamond",serif;font-size:2.6rem;font-weight:400;line-height:1}
+.facts3 span{font-size:.75rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.sig{font-family:"Cormorant Garamond",serif;font-style:italic;font-size:1.35rem;margin-top:2rem;color:var(--ink)}
+@media(max-width:900px){.two{grid-template-columns:1fr;gap:56px}section{padding:96px 0}.frame{order:-1;margin:0 18px 0 18px}}
+/* menu */
+#karte{background:var(--paper)}
+.center{text-align:center}.center .eyebrow::after{content:"";width:28px;height:1px;background:currentColor}
+.center p.lead{margin:0 auto}
+.tabs{display:flex;justify-content:center;flex-wrap:wrap;gap:.4rem 2.2rem;margin:3.5rem 0 3rem;border-bottom:1px solid var(--line)}
+.tab{background:none;border:0;font:inherit;font-size:.75rem;letter-spacing:.2em;text-transform:uppercase;padding:0 0 1rem;cursor:pointer;color:var(--muted);border-bottom:1px solid transparent;margin-bottom:-1px}
+.tab.on{color:var(--ink);border-color:var(--ink)}
+.menu{display:none;grid-template-columns:1fr 1fr;gap:0 80px;max-width:1000px;margin:0 auto}.menu.on{display:grid;animation:fade .6s}
+@keyframes fade{from{opacity:0;transform:translateY(8px)}}
+.dish{padding:1.35rem 0;border-bottom:1px solid var(--line)}
+.dish .row{display:flex;align-items:baseline;gap:1rem}
+.dish h4{font-family:"Cormorant Garamond",serif;font-size:1.45rem;font-weight:500}
+.dish .dots{flex:1;border-bottom:1px dotted #b9b3a6;transform:translateY(-5px)}
+.dish .p{font-family:"Cormorant Garamond",serif;font-size:1.3rem;white-space:nowrap}
+.dish p{font-size:.9rem;color:var(--muted);margin-top:.2rem}
+.al{font-family:Inter;font-size:.62rem;letter-spacing:.1em;color:var(--olive);margin-left:.35rem;vertical-align:middle}
+.small{font-size:.8rem;color:var(--muted);margin-top:2.5rem;text-align:center}
+.small a{color:var(--ink)}
+@media(max-width:760px){.menu{grid-template-columns:1fr}.tabs{gap:.4rem 1.3rem;justify-content:flex-start;overflow-x:auto;flex-wrap:nowrap;margin:2.5rem -28px 2rem;padding:0 28px}.tab{white-space:nowrap}}
+/* specials */
+.specs{display:grid;grid-template-columns:repeat(3,1fr);gap:0;margin-top:4rem;border-top:1px solid var(--line);border-left:1px solid var(--line)}
+.spec{padding:3rem 2.4rem;border-right:1px solid var(--line);border-bottom:1px solid var(--line);transition:.4s;background:var(--ivory)}
+.spec:hover{background:#fff}
+.spec .n{font-family:"Cormorant Garamond",serif;font-style:italic;color:var(--olive);font-size:1.1rem}
+.spec h3{font-size:2rem;margin:.6rem 0 .8rem}
+.spec p{color:var(--muted);font-size:.93rem}
+.spec .pr{margin-top:1.4rem;font-family:"Cormorant Garamond",serif;font-size:1.35rem}
+@media(max-width:900px){.specs{grid-template-columns:1fr}.spec{padding:2.2rem 1.6rem}}
+/* aegean band */
+.band{position:relative;height:62vh;min-height:380px;display:grid;place-items:center;color:#fff;text-align:center;overflow:hidden}
+.band img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.band::after{content:"";position:absolute;inset:0;background:#0b0f1a59}
+.band blockquote{position:relative;z-index:2;font-family:"Cormorant Garamond",serif;font-size:clamp(2rem,5vw,3.6rem);font-style:italic;max-width:16em;padding:0 24px}
+.band cite{display:block;font-family:Inter;font-style:normal;font-size:.72rem;letter-spacing:.3em;text-transform:uppercase;margin-top:1.4rem;color:var(--green)}
+/* drinks */
+#getraenke{background:var(--ink);color:#c9ccd4}
+#getraenke h2{color:#fff}#getraenke h2 em{color:var(--green)}#getraenke .eyebrow{color:var(--green)}
+.drinks{display:grid;grid-template-columns:repeat(4,1fr);gap:56px;margin-top:4rem}
+.drinks h3{color:#fff;font-size:1.55rem;margin-bottom:1.2rem;padding-bottom:1rem;border-bottom:1px solid #ffffff22}
+.dl{display:flex;justify-content:space-between;gap:1rem;padding:.45rem 0;font-size:.9rem}
+.dl span:last-child{color:#fff;white-space:nowrap}
+#getraenke .small,#getraenke .small a{color:#9aa0ab}
+@media(max-width:1000px){.drinks{grid-template-columns:1fr 1fr}}@media(max-width:600px){.drinks{grid-template-columns:1fr;gap:40px}}
+/* visit */
+.visit{display:grid;grid-template-columns:1fr 1fr 1fr;gap:64px}
+.visit h3{font-size:1.9rem;margin-bottom:1.2rem}
+.hours div{display:flex;justify-content:space-between;padding:.6rem 0;border-bottom:1px solid var(--line);font-size:.95rem}
+.hours .off{color:var(--muted);font-style:italic}
+.status{display:inline-flex;align-items:center;gap:.5rem;margin-top:1.2rem;font-size:.8rem;letter-spacing:.08em}
+.status::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--olive)}
+.big{font-family:"Cormorant Garamond",serif;font-size:2.3rem;text-decoration:none;display:block;line-height:1.2}
+.ways div{padding:.7rem 0;border-bottom:1px solid var(--line);font-size:.93rem}
+.ways b{font-weight:500}
+.map{width:100%;height:440px;border:0;margin-top:80px;filter:grayscale(.85) contrast(.95)}
+@media(max-width:960px){.visit{grid-template-columns:1fr;gap:56px}.map{height:320px;margin-top:56px}}
+/* hotel */
+#hotel{background:var(--paper)}
+.hotel{display:grid;grid-template-columns:1fr 1fr;gap:96px;align-items:center}
+.hotel .price{display:flex;align-items:baseline;gap:1rem;margin:2rem 0;padding:1.6rem 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.hotel .price b{font-family:"Cormorant Garamond",serif;font-size:3.6rem;font-weight:400;line-height:1}
+.hotel .meta{display:grid;grid-template-columns:1fr 1fr;gap:1rem;font-size:.9rem;margin-bottom:2rem}
+.hotel .meta span{display:block;font-size:.7rem;letter-spacing:.2em;text-transform:uppercase;color:var(--muted)}
+@media(max-width:900px){.hotel{grid-template-columns:1fr;gap:48px}}
+/* reserve */
+#reservieren{text-align:center;background:var(--ivory)}
+#reservieren .big{font-size:clamp(2.6rem,7vw,4.6rem);margin:1.5rem 0 .4rem}
+/* footer */
+footer{background:#161a22;color:#9aa0ab;padding:90px 0 40px;font-size:.88rem}
+footer .cols{display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:48px}
+footer h4{color:#fff;font-family:"Cormorant Garamond",serif;font-weight:400;font-size:1.35rem;margin-bottom:1rem}
+footer .logo{color:#fff;font-size:2rem}
+footer .bottom{margin-top:70px;padding-top:28px;border-top:1px solid #ffffff14;display:flex;justify-content:space-between;flex-wrap:wrap;gap:1rem;font-size:.75rem}
+@media(max-width:860px){footer .cols{grid-template-columns:1fr 1fr}}@media(max-width:520px){footer .cols{grid-template-columns:1fr}}
+.r{opacity:0;transform:translateY(24px);transition:opacity 1.1s ease,transform 1.1s cubic-bezier(.2,.7,.2,1)}.r.in{opacity:1;transform:none}
+@media(prefers-reduced-motion:reduce){.r{opacity:1;transform:none}#doors{display:none}}
+.mobile-call{display:none}
+@media(max-width:700px){.mobile-call{display:flex;position:fixed;bottom:0;left:0;right:0;z-index:60;background:var(--ink)}.mobile-call a{flex:1;text-align:center;color:#fff;text-decoration:none;padding:1rem;font-size:.75rem;letter-spacing:.18em;text-transform:uppercase}.mobile-call a+a{background:var(--green);color:var(--ink)}footer{padding-bottom:110px}}
+@media(max-width:600px){.credit{display:none}.hero .eyebrow{font-size:.62rem;letter-spacing:.22em}.hero .actions .btn{flex:1;justify-content:center;padding:.9rem 1rem;font-size:.7rem}.hero .actions{flex-wrap:nowrap}.hero p{font-size:1rem}.hero .wrap{padding-bottom:13vh}.facts3 b{font-size:2rem}}
+</style>
+</head>
+<body>
+<div id="doors" aria-hidden="true"><div class="leaf l"></div><div class="leaf r"></div><div class="mark"><div>Zeus <i>im Farmhaus</i><small>Lienen · seit 1650</small></div></div></div>
+
+<header class="top" id="hdr">
+ <div class="wrap bar">
+  <a class="logo" href="#top">Zeus <i>im Farmhaus</i></a>
+  <nav class="menu-links" id="nav"><a href="#geschichte">Geschichte</a><a href="#karte">Essen</a><a href="#spezialitaeten">Spezialitäten</a><a href="#getraenke">Getränke</a><a href="#besuch">Anreise</a><a href="#hotel">Hotel</a></nav>
+  <a class="btn" href="#reservieren">Reservieren</a>
+  <button class="burger" aria-label="Menü öffnen" onclick="nav.classList.toggle('show')"><span></span><span></span></button>
+ </div>
+</header>
+
+<section class="hero" id="top" style="padding:0">
+ <img src="img/farmhaus.jpg" alt="Das Alte Farmhaus in Lienen – weißes Fachwerkhaus am Dorfteich">
+ <span class="credit">Foto: Dierkschneider</span>
+ <div class="wrap">
+  <span class="eyebrow">Griechisches Restaurant · Lienen</span>
+  <h1>Zeus <em>im Farmhaus</em></h1>
+  <p>Griechische Gastfreundschaft im historischen Fachwerkhaus von 1650 – direkt am Dorfteich, mitten in Lienen.</p>
+  <div class="actions"><a class="btn green" href="#reservieren">Reservieren</a><a class="btn light" href="#karte">Speisekarte</a></div>
+ </div>
+ <div class="facts">Mittwoch – Montag<br>17:30 – 23:00 Uhr<br>Dienstag Ruhetag</div>
+</section>
+
+<div class="strip"><div class="wrap"><span>Zum Teich 1 · 49536 Lienen</span><span>Seit <b>32 Jahren</b> Gastronomie im Farmhaus</span><span>Familien &amp; Radfahrer willkommen</span></div></div>
+
+<section id="geschichte">
+ <div class="wrap two">
+  <div class="r">
+   <span class="eyebrow">Unsere Geschichte</span>
+   <h2>Ein Haus von 1650,<br><em>ein neues Kapitel</em></h2>
+   <p class="lead">Zeus im Farmhaus blickt stolz auf 32 Jahre Geschichte zurück – voller köstlicher, traditioneller Gerichte. Unter den Balken des alten Vier-Ständer-Fachwerkhauses kommen seitdem Familien, Freunde und Radfahrer zusammen.</p>
+   <p class="lead" style="margin-top:1.2rem">Am 16. Mai 2026 haben Georgios Tzaras – von allen nur „Zeus“ genannt – und Panagiotis Koutelidas das Restaurant neu eröffnet: mit griechischer Küche, ehrlichen Zutaten und viel Herzlichkeit.</p>
+   <div class="facts3"><div><b>1650</b><span>Baujahr</span></div><div><b>32</b><span>Jahre Tradition</span></div><div><b>2026</b><span>Neueröffnung</span></div></div>
+   <div class="sig">Καλώς ήρθατε – Georgios &amp; Panagiotis</div>
+  </div>
+  <div class="frame r"><img src="img/logo.png" alt="Logo Zeus im Farmhaus" style="aspect-ratio:1"></div>
+ </div>
+</section>
+
+<section id="karte">
+ <div class="wrap">
+  <div class="center r"><span class="eyebrow">Essen</span><h2>Unsere <em>Speisekarte</em></h2><p class="lead">Alle Hauptgerichte werden mit einem Beilagensalat serviert. Beilage nach Wahl: Pommes, Knoblauchkartoffeln, Gemüsereis oder Pfannengemüse.</p></div>
+  <div class="tabs" id="tabs"></div>
+  <div id="menus"></div>
+  <p class="small">Alle Preise inkl. MwSt. · Allergene: A Gluten, C Ei, D Fisch, G Milch/Laktose · <a href="https://www.zeus-im-farmhaus.de/_files/ugd/2730d0_f1f4bedacf564b7892a108b57f8dffc9.pdf" target="_blank" rel="noopener">Speisekarte als PDF</a></p>
+ </div>
+</section>
+
+<section id="spezialitaeten">
+ <div class="wrap">
+  <div class="r" style="max-width:640px"><span class="eyebrow">Spezialitäten</span><h2>Was Sie bei uns<br><em>probieren sollten</em></h2></div>
+  <div class="specs">
+   <div class="spec r"><span class="n">I.</span><h3>Ouzo Meze</h3><p>Kalte Vorspeisen für zwei Personen, traditionell als Meze serviert – auf Wunsch mit Ouzo nach Wahl auf Eis.</p><div class="pr">25,90 € <small style="font-size:.9rem;color:var(--muted)">· Ouzo + 5,00 €</small></div></div>
+   <div class="spec r"><span class="n">II.</span><h3>Bifteki Farmhaus</h3><p>Hacksteak aus Schwein und Rind, gefüllt mit Feta – die Spezialität des Hauses.</p><div class="pr">20,90 €</div></div>
+   <div class="spec r"><span class="n">III.</span><h3>Klassisches Moussaka</h3><p>Griechischer Auberginenauflauf mit Hackfleisch und Béchamelsauce.</p><div class="pr">20,90 €</div></div>
+   <div class="spec r"><span class="n">IV.</span><h3>Geschmorte Lammhaxe</h3><p>Langsam geschmortes Lamm mit grünen Bohnen in Tomatensauce.</p><div class="pr">23,90 €</div></div>
+   <div class="spec r"><span class="n">V.</span><h3>Großer Grillteller</h3><p>Gyros, ein Souvlaki und ein Souzuki mit Beilage nach Wahl.</p><div class="pr">26,90 €</div></div>
+   <div class="spec r"><span class="n">VI.</span><h3>Feta Fourno</h3><p>Gebackener Feta mit Tomaten, Paprika und Kräutern.</p><div class="pr">11,90 €</div></div>
+  </div>
+ </div>
+</section>
+
+<div class="band"><img src="img/aegaeis.jpg" alt="Blick über die Ägäis"><blockquote>„Ein Stück Griechenland im Herzen von Lienen.“<cite>Zeus im Farmhaus</cite></blockquote></div>
+
+<section id="getraenke">
+ <div class="wrap">
+  <div class="r"><span class="eyebrow">Getränke</span><h2>Γεια μας – <em>Prost!</em></h2><p class="lead" style="color:#b6bac3">Frisch gezapftes Bier, griechische Weine, Ouzo und Metaxa, dazu griechischer Mokka – eine Auswahl aus unserer Getränkekarte.</p></div>
+  <div class="drinks" id="drinks"></div>
+  <p class="small">Alle Preise inkl. MwSt. · <a href="https://www.zeus-im-farmhaus.de/_files/ugd/2730d0_3dd8039c49aa45dd8d4ace2284ed4227.pdf" target="_blank" rel="noopener">Vollständige Getränkekarte als PDF</a></p>
+ </div>
+</section>
+
+<section id="besuch">
+ <div class="wrap">
+  <div class="r"><span class="eyebrow">Besuch &amp; Anreise</span><h2>Wir freuen uns<br><em>auf Ihren Besuch</em></h2></div>
+  <div class="visit" style="margin-top:3rem">
+   <div class="r"><h3>Öffnungszeiten</h3><div class="hours"><div><span>Montag</span><span>17:30 – 23:00</span></div><div class="off"><span>Dienstag</span><span>Ruhetag</span></div><div><span>Mittwoch</span><span>17:30 – 23:00</span></div><div><span>Donnerstag</span><span>17:30 – 23:00</span></div><div><span>Freitag</span><span>17:30 – 23:00</span></div><div><span>Samstag</span><span>17:30 – 23:00</span></div><div><span>Sonntag</span><span>17:30 – 23:00</span></div></div><span class="status" id="status"></span></div>
+   <div class="r"><h3>Adresse</h3><p style="font-size:1.05rem;margin-bottom:1.4rem">Zeus im Farmhaus<br>Zum Teich 1<br>49536 Lienen</p><a class="big" href="tel:+495483749534">05483 749534</a><a href="mailto:info@zeus-im-farmhaus.de">info@zeus-im-farmhaus.de</a><div style="margin-top:2rem"><a class="btn solid" href="https://www.google.com/maps/dir/?api=1&destination=Zum+Teich+1,+49536+Lienen" target="_blank" rel="noopener">Route planen</a></div></div>
+   <div class="r ways"><h3>Anreise</h3><div><b>Auto</b> — Parkmöglichkeiten in der Nähe</div><div><b>Bahn</b> — vom Bahnhof Lienen ca. 8 Minuten zu Fuß</div><div><b>Bus</b> — Haltestelle „Rathaus“</div><div><b>Fahrrad</b> — Radfahrer sind herzlich willkommen</div></div>
+  </div>
+  <iframe class="map r" loading="lazy" title="Karte: Zum Teich 1, 49536 Lienen" src="https://www.openstreetmap.org/export/embed.html?bbox=7.9640%2C52.1420%2C7.9860%2C52.1500&amp;layer=mapnik&amp;marker=52.1460%2C7.9750"></iframe>
+ </div>
+</section>
+
+<section id="hotel">
+ <div class="wrap hotel">
+  <div class="frame r"><img src="img/farmhaus.jpg" alt="Hotel Altes Farmhaus" style="aspect-ratio:4/3;object-position:60% 50%" loading="lazy"></div>
+  <div class="r">
+   <span class="eyebrow">Übernachten im selben Haus</span>
+   <h2>Hotel <em>Altes Farmhaus</em></h2>
+   <p class="lead">Nach dem Abendessen einfach bleiben: Unter demselben Dach liegt das Hotel Altes Farmhaus – ein schöner Ausgangspunkt für Touren durch das Tecklenburger Land.</p>
+   <div class="price"><b>90 €</b><span>pro Nacht im Doppelzimmer</span></div>
+   <div class="meta"><div><span>Check-in</span>ab 14:00 Uhr</div><div><span>Check-out</span>bis 10:00 Uhr</div></div>
+   <a class="btn solid" href="tel:+4954838363">Hotel anrufen · 05483 8363</a>
+   <a class="btn" style="margin-top:.8rem" href="https://hotel-altes-farmhaus.chayns.site/" target="_blank" rel="noopener">Website</a>
+  </div>
+ </div>
+</section>
+
+<section id="reservieren">
+ <div class="wrap r"><span class="eyebrow">Reservierung</span><h2>Ihr Tisch <em>erwartet Sie</em></h2><p class="lead" style="margin:0 auto">Reservieren Sie gern telefonisch oder per E-Mail – wir freuen uns auf Sie.</p><a class="big" href="tel:+495483749534">05483 749534</a><p><a href="mailto:info@zeus-im-farmhaus.de?subject=Tischreservierung">info@zeus-im-farmhaus.de</a></p></div>
+</section>
+
+<footer>
+ <div class="wrap">
+  <div class="cols">
+   <div><a class="logo" href="#top">Zeus <i>im Farmhaus</i></a><p style="margin-top:1rem;max-width:22em">Griechisches Restaurant im historischen Fachwerkhaus von 1650.</p></div>
+   <div><h4>Kontakt</h4>Zum Teich 1<br>49536 Lienen<br><a href="tel:+495483749534">05483 749534</a><br><a href="mailto:info@zeus-im-farmhaus.de">info@zeus-im-farmhaus.de</a></div>
+   <div><h4>Öffnungszeiten</h4>Mittwoch – Montag<br>17:30 – 23:00 Uhr<br>Dienstag Ruhetag</div>
+   <div id="impressum"><h4>Impressum</h4>[Betreiber / Rechtsform]<br>Zum Teich 1, 49536 Lienen<br>USt-ID: [bitte ergänzen]<br><a href="#impressum">Datenschutz</a></div>
+  </div>
+  <div class="bottom"><span>© 2026 Zeus im Farmhaus</span><span>Titelfoto: Dierkschneider / Altes Farmhaus Lienen</span></div>
+ </div>
+</footer>
+<div class="mobile-call"><a href="tel:+495483749534">Anrufen</a><a href="#karte">Speisekarte</a></div>
+<script>
+
+const M={
+ "Vorspeisen":[["Tzatziki","G","6,90","Joghurt-Quark-Creme mit Gurken, Knoblauch und Olivenöl"],["Taramas","A","7,90","Traditioneller Dip aus feinem Fischrogen, Olivenöl und Zitrone"],["Rote-Bete-Salat","","8,50","Gebackene Rote Bete mit griechischem Joghurt und gerösteten Walnüssen"],["Dakos","A,G","9,90","Gerstenzwieback mit Tomaten, Feta und Olivenöl"],["Feta Fourno","G","11,90","Gebackener Feta mit Tomaten, Paprika und Kräutern"],["Gegrillte Peperoni","","6,90","In Olivenöl gegrillt, mit Knoblauch abgeschmeckt"],["Kolokithokeftedes","A,C,G","10,90","Gebratene Zucchinibällchen mit Joghurt-Dip"],["Knoblauchbrot","A","5,50","Frisches Brot mit Knoblauch und Olivenöl"],["Spanakopita","","9,60","Zwei Blätterteigtaschen mit Spinat und Feta, dazu Tzatziki"],["Ouzo Meze","","25,90","Kalte Vorspeisen für zwei Personen · Ouzo nach Wahl +5,00 €"]],
+ "Salate":[["Bauernsalat Farmhaus","G","14,50","Tomaten, Gurken, Zwiebeln, Feta und Kalamata-Oliven"],["Grüner Salat","","10,90","Frischer Blattsalat mit Zitrone und Olivenöl"],["Hähnchen Salat","G","16,50","Bunter Salat mit gegrillter Hähnchenbrust"],["Kleiner Beilagensalat","","4,90",""]],
+ "Vegetarisch":[["Fasolakia","G","14,90","Grüne Bohnen in Tomatensauce, mit Feta überbacken"],["Gemista","","16,80","Tomaten und Paprika gefüllt mit Reis, Gemüse und Kräutern"],["Ofengemüse mit Feta","G","16,80","Überbackenes saisonales Gemüse"]],
+ "Hauptgerichte":[["Bifteki Farmhaus","G","20,90","Hacksteak aus Schwein und Rind, gefüllt mit Feta"],["Hähnchenbrustfilet vom Grill","","20,90","Saftiges Hähnchenbrustfilet vom Grill"],["Schweinefiletmedaillons","G","21,90","Zarte Medaillons in Champignonsauce"],["Souvlaki vom Schwein","","21,90","Zwei traditionelle Spieße vom Grill"],["Klassisches Moussaka","","20,90","Auberginenauflauf mit Hackfleisch und Béchamelsauce"],["Geschmorte Lammhaxe","","23,90","Mit grünen Bohnen in Tomatensauce"]],
+ "Grill & Fisch":[["Kleiner Grillteller","","21,90","Gyros mit einem Souvlaki"],["Großer Grillteller","","26,90","Gyros, ein Souvlaki und ein Souzuki"],["Taxi-Teller","","21,90","Gyros und Bratwurst, dazu Tzatziki und Pommes"],["Lachsfilet vom Grill","","26,80","Gegrilltes Lachsfilet"],["Doradenfilet","","28,90","Gegrilltes Doradenfilet"]],
+ "Desserts":[["Griechischer Joghurt","G","7,50","Mit Honig und Walnüssen"],["Hauskuchen","A,C,G","6,00",""]]
+};
+const D={"Frisch gezapft":[["Krombacher Pils 0,3 l","3,70"],["Krombacher Pils 0,5 l","4,90"],["Starnberger Hell 0,3 l","4,00"],["Starnberger Hell 0,5 l","5,20"],["Krombacher Weizen 0,5 l","4,90"]],
+"Griechische Weine (0,2 l)":[["Imiglikos lieblich (rot/weiß)","6,90"],["Makedonikos halbtrocken","7,20"],["Ploes Cabernet trocken","7,20"],["Retsina Malamatina","6,90"],["Ploes Chardonnay Assyrtiko","7,20"],["Volta Rosé trocken","7,20"]],
+"Aperitif & Digestif":[["Ouzo Loukatos 2 cl","2,50"],["Ouzo Plomari 2 cl","3,20"],["Aperol Spritz","6,50"],["Idonilo Tsipouro 0,2 l","15,50"],["Metaxa 5 Sterne 2 cl","3,50"],["Metaxa 40 Jahre 2 cl","12,00"]],
+"Kaffee & Alkoholfrei":[["Griechischer Mokka","3,80"],["Espresso","3,00"],["Cappuccino","4,80"],["Christinen Wasser 0,75 l","6,50"],["Pepsi / 7Up / Schwip Schwap 0,4 l","4,70"],["Säfte 0,2 l","3,00"]]};
+const tabs=document.getElementById('tabs'),menus=document.getElementById('menus');
+Object.entries(M).forEach(([k,v],i)=>{const b=document.createElement('button');b.className='tab'+(i?'':' on');b.textContent=k;tabs.append(b);
+ const g=document.createElement('div');g.className='menu'+(i?'':' on');
+ g.innerHTML=v.map(d=>`<div class="dish"><div class="row"><h4>${d[0]}${d[1]?`<span class="al">${d[1]}</span>`:''}</h4><span class="dots"></span><span class="p">${d[2]} €</span></div>${d[3]?`<p>${d[3]}</p>`:''}</div>`).join('');menus.append(g);
+ b.onclick=()=>{document.querySelectorAll('.tab,.menu').forEach(e=>e.classList.remove('on'));b.classList.add('on');g.classList.add('on')}});
+document.getElementById('drinks').innerHTML=Object.entries(D).map(([k,v])=>`<div class="r"><h3>${k}</h3>${v.map(d=>`<div class="dl"><span>${d[0]}</span><span>${d[1]} €</span></div>`).join('')}</div>`).join('');
+const now=new Date(),d=now.getDay(),m=now.getHours()*60+now.getMinutes();
+status.textContent=d===2?'Heute Ruhetag':(m>=1050&&m<1380?'Jetzt geöffnet':'Heute geöffnet ab 17:30 Uhr');
+const hdr=document.getElementById('hdr');const sc=()=>hdr.classList.toggle('solid',scrollY>60);addEventListener('scroll',sc,{passive:true});sc();
+document.querySelectorAll('#nav a').forEach(a=>a.onclick=()=>nav.classList.remove('show'));
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}}),{threshold:.1});
+document.querySelectorAll('.r').forEach(e=>io.observe(e));
+const doors=document.getElementById('doors'),img=document.querySelector('.hero img');
+function open(){setTimeout(()=>{doors.classList.add('open');document.body.classList.add('ready')},650);setTimeout(()=>doors.remove(),2400)}
+if(sessionStorage.getItem('z')){doors.remove();document.body.classList.add('ready')}else{sessionStorage.setItem('z',1);img.complete?open():img.onload=open;setTimeout(open,2500)}
+</script>
+</body></html>
