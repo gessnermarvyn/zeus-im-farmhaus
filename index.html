@@ -36,6 +36,9 @@ p.lead{font-size:1.08rem;color:#3d424c;max-width:34em}
 #doors .mark{position:absolute;inset:0;display:grid;place-items:center;text-align:center;transition:opacity .6s}
 #doors .mark div{font-family:"Cormorant Garamond",serif;font-size:clamp(2.2rem,6vw,3.6rem);color:var(--ink)}
 #doors .mark small{display:block;font-family:Inter;font-size:.7rem;letter-spacing:.4em;color:var(--olive);margin-top:.6rem;text-transform:uppercase}
+#doors .coin{width:clamp(96px,14vw,132px);height:auto;margin:0 auto 1.6rem;display:block;border-radius:50%;box-shadow:0 10px 30px -8px #5a3f1266,0 0 0 1px #b8955a55;animation:zspin 1.2s linear infinite;will-change:transform}
+@keyframes zspin{to{transform:rotate(360deg)}}
+#doors.open .coin{opacity:0;transform:scale(.9)!important;transition:opacity .5s,transform .5s!important}
 #doors.open .l{transform:translateX(-101%)}#doors.open .r{transform:translateX(101%)}#doors.open .mark{opacity:0}
 /* header */
 header.top{position:fixed;top:0;left:0;right:0;z-index:50;transition:.4s;color:#fff}
@@ -162,7 +165,7 @@ footer .bottom{margin-top:70px;padding-top:28px;border-top:1px solid #ffffff14;d
 </style>
 </head>
 <body>
-<div id="doors" aria-hidden="true"><div class="leaf l"></div><div class="leaf r"></div><div class="mark"><div>Zeus <i>im Farmhaus</i><small>Lienen · seit 1650</small></div></div></div>
+<div id="doors" aria-hidden="true"><div class="leaf l"></div><div class="leaf r"></div><div class="mark"><div><img class="coin" id="coin" src="img/zeus-coin.webp" alt="" width="132" height="132">Zeus <i>im Farmhaus</i><small>Lienen · seit 1650</small></div></div></div>
 
 <header class="top" id="hdr">
  <div class="wrap bar">
@@ -273,7 +276,7 @@ footer .bottom{margin-top:70px;padding-top:28px;border-top:1px solid #ffffff14;d
    <div><h4>Öffnungszeiten</h4>Mittwoch – Montag<br>17:30 – 23:00 Uhr<br>Dienstag Ruhetag</div>
    <div id="impressum"><h4>Impressum</h4>[Betreiber / Rechtsform]<br>Zum Teich 1, 49536 Lienen<br>USt-ID: [bitte ergänzen]<br><a href="#impressum">Datenschutz</a></div>
   </div>
-  <div class="bottom"><span>© 2026 Zeus im Farmhaus</span><span>Titelfoto: Dierkschneider / Altes Farmhaus Lienen</span></div>
+  <div class="bottom"><span>© 2026 Zeus im Farmhaus</span><span>Titelfoto: Dierkschneider / Altes Farmhaus Lienen · Zeus-Münze: Tetradrachme Philipps II., Cabinet des Médailles Paris, Foto <a href="https://commons.wikimedia.org/wiki/File:Silver_tetradrachm_obverse_Philip_II_CdM_Paris_Armand-Valton315.jpg">Wikimedia Commons</a>, CC BY 2.5</span></div>
  </div>
 </footer>
 <div class="mobile-call"><a href="tel:+495483749534">Anrufen</a><a href="#karte">Speisekarte</a></div>
@@ -304,7 +307,14 @@ document.querySelectorAll('#nav a').forEach(a=>a.onclick=()=>nav.classList.remov
 const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}}),{threshold:.1});
 document.querySelectorAll('.r').forEach(e=>io.observe(e));
 const doors=document.getElementById('doors'),img=document.querySelector('.hero img');
-function open(){setTimeout(()=>{doors.classList.add('open');document.body.classList.add('ready')},650);setTimeout(()=>doors.remove(),2400)}
-if(sessionStorage.getItem('z')){doors.remove();document.body.classList.add('ready')}else{sessionStorage.setItem('z',1);img.complete?open():img.onload=open;setTimeout(open,2500)}
+let done=false;const coin=document.getElementById('coin');
+function settle(){if(done)return;done=true;
+ const m=getComputedStyle(coin).transform;let a=0;if(m&&m!=='none'){const v=m.match(/matrix\(([^)]+)\)/)[1].split(',').map(parseFloat);a=Math.atan2(v[1],v[0])*180/Math.PI;if(a<0)a+=360}
+ coin.style.animation='none';coin.style.transform=`rotate(${a}deg)`;coin.offsetWidth;
+ coin.style.transition='transform 1s cubic-bezier(.22,.9,.25,1)';coin.style.transform='rotate(360deg) scale(1.08)';
+ setTimeout(()=>{coin.style.transition='transform .5s ease';coin.style.transform='rotate(360deg) scale(1)'},1000);
+ setTimeout(()=>{doors.classList.add('open');document.body.classList.add('ready')},1650);setTimeout(()=>doors.remove(),3300)}
+if(sessionStorage.getItem('z')||matchMedia('(prefers-reduced-motion: reduce)').matches){doors.remove();document.body.classList.add('ready')}
+else{sessionStorage.setItem('z',1);document.readyState==='complete'?settle():addEventListener('load',settle);setTimeout(settle,6000)}
 </script>
 </body></html>
