@@ -162,6 +162,20 @@ footer .bottom{margin-top:70px;padding-top:28px;border-top:1px solid #ffffff14;d
 .mobile-call{display:none}
 @media(max-width:700px){.mobile-call{display:flex;position:fixed;bottom:0;left:0;right:0;z-index:60;background:var(--ink)}.mobile-call a{flex:1;text-align:center;color:#fff;text-decoration:none;padding:1rem;font-size:.75rem;letter-spacing:.18em;text-transform:uppercase}.mobile-call a+a{background:var(--green);color:var(--ink)}footer{padding-bottom:110px}}
 @media(max-width:600px){.credit{display:none}.hero .eyebrow{font-size:.62rem;letter-spacing:.22em}.hero .actions .btn{flex:1;justify-content:center;padding:.9rem 1rem;font-size:.7rem}.hero .actions{flex-wrap:nowrap}.hero p{font-size:1rem}.hero .wrap{padding-bottom:13vh}.facts3 b{font-size:2rem}}
+
+/* hero v3: house fully visible, name on top */
+.hero{align-items:stretch}
+.hero::after{background:linear-gradient(180deg,#0b0f1aa6 0%,#0b0f1a55 22%,#0b0f1a00 38%,#0b0f1a00 76%,#0b0f1a8c 100%)}
+.hero img{object-position:50% 62%}
+.hero .wrap{display:flex;flex-direction:column;justify-content:space-between;padding-top:104px;padding-bottom:28px;text-align:center}
+.hero .eyebrow{justify-content:center}.hero .eyebrow::after{content:"";width:28px;height:1px;background:currentColor}
+.hero h1{font-size:clamp(2.8rem,6.4vw,5.6rem);margin:.5rem 0 0;text-shadow:0 2px 24px #0b0f1a80}
+.hero .tag{max-width:none;margin-bottom:0;font-family:"Cormorant Garamond",serif;font-style:italic;font-size:clamp(1.05rem,1.6vw,1.35rem);color:#fffffff0;text-shadow:0 1px 12px #0b0f1a99;margin:.4rem 0 0}
+.hero .lower{display:flex;align-items:flex-end;justify-content:space-between;gap:1rem;text-align:left}
+.hero .actions .btn{padding:.8rem 1.4rem;font-size:.7rem}
+.hero .facts{position:static;font-size:.68rem;line-height:1.8}
+@media(max-width:860px){.hero img{object-position:46% 60%}.hero .lower{justify-content:center}.hero .wrap{padding-top:96px;padding-bottom:86px}}
+@media(max-width:600px){.hero .actions{width:100%}.hero h1{font-size:2.7rem}.hero .eyebrow{font-size:.58rem}}
 </style>
 </head>
 <body>
@@ -180,12 +194,16 @@ footer .bottom{margin-top:70px;padding-top:28px;border-top:1px solid #ffffff14;d
  <img src="img/farmhaus.jpg" alt="Das Alte Farmhaus in Lienen – weißes Fachwerkhaus am Dorfteich">
  <span class="credit">Foto: Dierkschneider</span>
  <div class="wrap">
-  <span class="eyebrow">Griechisches Restaurant · Lienen</span>
-  <h1>Zeus <em>im Farmhaus</em></h1>
-  <p>Griechische Gastfreundschaft im historischen Fachwerkhaus von 1650 – direkt am Dorfteich, mitten in Lienen.</p>
-  <div class="actions"><a class="btn green" href="#reservieren">Reservieren</a><a class="btn light" href="#karte">Speisekarte</a></div>
+  <div class="upper">
+   <span class="eyebrow">Griechisches Restaurant · Lienen</span>
+   <h1>Zeus <em>im Farmhaus</em></h1>
+   <p class="tag">Griechische Küche im Fachwerkhaus von 1650</p>
+  </div>
+  <div class="lower">
+   <div class="actions"><a class="btn green" href="#reservieren">Reservieren</a><a class="btn light" href="#karte">Speisekarte</a></div>
+   <div class="facts">Mi – Mo · 17:30 – 23:00<br>Dienstag Ruhetag</div>
+  </div>
  </div>
- <div class="facts">Mittwoch – Montag<br>17:30 – 23:00 Uhr<br>Dienstag Ruhetag</div>
 </section>
 
 <div class="strip"><div class="wrap"><span>Zum Teich 1 · 49536 Lienen</span><span>Seit <b>32 Jahren</b> Gastronomie im Farmhaus</span><span>Familien &amp; Radfahrer willkommen</span></div></div>
