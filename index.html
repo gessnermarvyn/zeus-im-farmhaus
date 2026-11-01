@@ -176,6 +176,16 @@ footer .bottom{margin-top:70px;padding-top:28px;border-top:1px solid #ffffff14;d
 .hero .facts{position:static;font-size:.68rem;line-height:1.8}
 @media(max-width:860px){.hero img{object-position:46% 60%}.hero .lower{justify-content:center}.hero .wrap{padding-top:96px;padding-bottom:86px}}
 @media(max-width:600px){.hero .actions{width:100%}.hero h1{font-size:2.7rem}.hero .eyebrow{font-size:.58rem}}
+
+/* readable backing that fades on scroll */
+.hero{--bk:1}
+.hero .upper{position:relative;align-self:center;padding:1.3rem 2.4rem 1.4rem;max-width:min(760px,100%)}
+.hero .upper::before,.hero .facts::before{content:"";position:absolute;inset:0;background:#263149d9;border:1px solid #E5F7AF40;opacity:var(--bk);z-index:-1;backdrop-filter:blur(3px)}
+.hero .upper .eyebrow{color:#E5F7AF;font-weight:500;letter-spacing:.26em}
+.hero .tag{color:#FAF8F3;font-style:italic}
+.hero h1{text-shadow:0 2px 18px #0b0f1a66}
+.hero .facts{position:relative;padding:.6rem 1rem;color:#FAF8F3;font-weight:400}
+@media(max-width:600px){.hero .upper{padding:1rem 1.1rem 1.1rem;width:100%}.hero .upper .eyebrow{letter-spacing:.14em;font-size:.6rem;gap:.5rem}.hero .upper .eyebrow::before,.hero .upper .eyebrow::after{width:16px}}
 </style>
 </head>
 <body>
@@ -320,6 +330,7 @@ Object.entries(M).forEach(([k,v],i)=>{const b=document.createElement('button');b
 document.getElementById('drinks').innerHTML=Object.entries(D).map(([k,v])=>`<div class="r"><h3>${k}</h3>${v.map(d=>`<div class="dl"><span>${d[0]}</span><span>${d[1]} €</span></div>`).join('')}</div>`).join('');
 const now=new Date(),d=now.getDay(),m=now.getHours()*60+now.getMinutes();
 status.textContent=d===2?'Heute Ruhetag':(m>=1050&&m<1380?'Jetzt geöffnet':'Heute geöffnet ab 17:30 Uhr');
+const heroEl=document.querySelector('.hero');addEventListener('scroll',()=>heroEl.style.setProperty('--bk',Math.max(0,1-scrollY/(innerHeight*.45)).toFixed(3)),{passive:true});
 const hdr=document.getElementById('hdr');const sc=()=>hdr.classList.toggle('solid',scrollY>60);addEventListener('scroll',sc,{passive:true});sc();
 document.querySelectorAll('#nav a').forEach(a=>a.onclick=()=>nav.classList.remove('show'));
 const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}}),{threshold:.1});
