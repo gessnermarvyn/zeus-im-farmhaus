@@ -186,6 +186,14 @@ footer .bottom{margin-top:70px;padding-top:28px;border-top:1px solid #ffffff14;d
 .hero h1{text-shadow:0 2px 18px #0b0f1a66}
 .hero .facts{position:relative;padding:.6rem 1rem;color:#FAF8F3;font-weight:400}
 @media(max-width:600px){.hero .upper{padding:1rem 1.1rem 1.1rem;width:100%}.hero .upper .eyebrow{letter-spacing:.14em;font-size:.6rem;gap:.5rem}.hero .upper .eyebrow::before,.hero .upper .eyebrow::after{width:16px}}
+
+/* zoomed photo, text on roof */
+@media(min-width:861px){.hero img{transform-origin:47% 56%;transform:scale(1.42)}body.ready .hero img{transform:scale(1.32)}}
+.hero .wrap{padding-top:92px}
+.hero .upper{padding:1rem 2rem 1.1rem}
+.hero h1{font-size:clamp(2.6rem,5.4vw,4.8rem)}
+@media(max-width:600px){.hero h1{font-size:2.4rem}.hero .tag{font-size:.98rem}.hero .upper .eyebrow{letter-spacing:.12em;font-size:.58rem;gap:.5rem;white-space:nowrap}.hero .upper .eyebrow::before,.hero .upper .eyebrow::after{width:14px}.hero .upper{padding:.8rem 1rem .9rem}}
+@media(max-width:860px){.hero .wrap{padding-top:78px}.hero img{object-position:46% 70%}}
 </style>
 </head>
 <body>
