@@ -40,9 +40,9 @@ const TR={ // Deutsch -> [English, Ελληνικά]
 "Titelfoto: Dierkschneider / Altes Farmhaus Lienen · Zeus-Münze: Tetradrachme Philipps II., Cabinet des Médailles Paris, Foto":["Cover photo: Dierkschneider / Altes Farmhaus Lienen · Zeus coin: tetradrachm of Philip II, Cabinet des Médailles Paris, photo","Φωτογραφία: Dierkschneider / Altes Farmhaus Lienen · Νόμισμα Δία: τετράδραχμο Φιλίππου Β΄, Cabinet des Médailles Παρίσι, φωτογραφία"]
 };
 const UI={ // dynamische Texte
- de:{req:"Bitte ausfüllen.",mail:"Bitte gültige E-Mail angeben.",tel:"Bitte gültige Telefonnummer angeben.",tue:"Dienstag ist Ruhetag – bitte anderen Tag wählen.",past:"Bitte ein Datum ab heute wählen.",pers:n=>n+(n==1?" Person":" Personen"),big:"9+ Personen (bitte anrufen)",open:"Jetzt geöffnet",closedT:"Heute Ruhetag",later:"Heute geöffnet ab 17:30 Uhr",sum:["Name","Datum","Uhrzeit","Personen"],candle:"Kerzenlicht"},
- en:{req:"Please fill in.",mail:"Please enter a valid email.",tel:"Please enter a valid phone number.",tue:"We are closed on Tuesdays – please choose another day.",past:"Please choose today or a later date.",pers:n=>n+(n==1?" guest":" guests"),big:"9+ guests (please call)",open:"Open now",closedT:"Closed today",later:"Open today from 5:30 pm",sum:["Name","Date","Time","Guests"],candle:"Candlelight"},
- el:{req:"Συμπληρώστε το πεδίο.",mail:"Εισάγετε έγκυρο email.",tel:"Εισάγετε έγκυρο τηλέφωνο.",tue:"Την Τρίτη είμαστε κλειστά – επιλέξτε άλλη ημέρα.",past:"Επιλέξτε σημερινή ή μελλοντική ημερομηνία.",pers:n=>n+(n==1?" άτομο":" άτομα"),big:"9+ άτομα (τηλεφωνικά)",open:"Ανοιχτά τώρα",closedT:"Σήμερα κλειστά",later:"Ανοιχτά σήμερα από 17:30",sum:["Όνομα","Ημερομηνία","Ώρα","Άτομα"],candle:"Φως κεριού"}
+ de:{req:"Bitte ausfüllen.",mail:"Bitte gültige E-Mail angeben.",tel:"Bitte gültige Telefonnummer angeben.",tue:"Dienstag ist Ruhetag – bitte anderen Tag wählen.",past:"Bitte ein Datum ab heute wählen.",pers:n=>n+(n==1?" Person":" Personen"),big:"9+ Personen (bitte anrufen)",open:"Jetzt geöffnet",closedT:"Heute Ruhetag",later:"Heute geöffnet ab 17:30 Uhr",sum:["Name","Datum","Uhrzeit","Personen"]},
+ en:{req:"Please fill in.",mail:"Please enter a valid email.",tel:"Please enter a valid phone number.",tue:"We are closed on Tuesdays – please choose another day.",past:"Please choose today or a later date.",pers:n=>n+(n==1?" guest":" guests"),big:"9+ guests (please call)",open:"Open now",closedT:"Closed today",later:"Open today from 5:30 pm",sum:["Name","Date","Time","Guests"]},
+ el:{req:"Συμπληρώστε το πεδίο.",mail:"Εισάγετε έγκυρο email.",tel:"Εισάγετε έγκυρο τηλέφωνο.",tue:"Την Τρίτη είμαστε κλειστά – επιλέξτε άλλη ημέρα.",past:"Επιλέξτε σημερινή ή μελλοντική ημερομηνία.",pers:n=>n+(n==1?" άτομο":" άτομα"),big:"9+ άτομα (τηλεφωνικά)",open:"Ανοιχτά τώρα",closedT:"Σήμερα κλειστά",later:"Ανοιχτά σήμερα από 17:30",sum:["Όνομα","Ημερομηνία","Ώρα","Άτομα"]}
 };
 const DISH_EN={"Bauernsalat Farmhaus":"Greek farmer’s salad","Hähnchen Salat":"Chicken salad","Grüner Salat":"Green salad","Kleiner Beilagensalat":"Small side salad","Knoblauchbrot":"Garlic bread","Gegrillte Peperoni":"Grilled peppers","Rote-Bete-Salat":"Beetroot salad","Gemista":"Stuffed tomatoes & peppers","Fasolakia":"Green beans","Ofengemüse mit Feta":"Oven vegetables with feta","Hähnchenbrustfilet vom Grill":"Grilled chicken breast","Schweinefiletmedaillons":"Pork tenderloin medallions","Souvlaki vom Schwein":"Pork souvlaki","Klassisches Moussaka":"Classic moussaka","Geschmorte Lammhaxe":"Braised lamb shank","Kleiner Grillteller":"Small grill platter","Großer Grillteller":"Large grill platter","Taxi-Teller":"Taxi platter","Lachsfilet vom Grill":"Grilled salmon","Doradenfilet":"Sea bream fillet","Griechischer Joghurt":"Greek yoghurt","Hauskuchen":"Homemade cake"};
 let LANG=localStorage.getItem('zeus-lang')||'de';
@@ -52,15 +52,13 @@ const nodes=[];
 function applyLang(l){LANG=l;localStorage.setItem('zeus-lang',l);document.documentElement.lang=l;
  nodes.forEach(([n,orig,key,kind])=>{if(l==='de'){n.nodeValue=orig;return}
   const t=kind==='dish'?(l==='en'?DISH_EN[key]:null):TR[key][idx[l]];n.nodeValue=t?orig.replace(key,t):orig});
- document.querySelectorAll('.lang button').forEach(b=>b.classList.toggle('on',b.dataset.l===l));
- document.getElementById('candleT').title=UI[l].candle;fillPersons();updateStatus();}
-document.querySelectorAll('.lang button').forEach(b=>b.onclick=()=>applyLang(b.dataset.l));
-/* Kerzenlicht */
-const ct=document.getElementById('candleT');
-function setCandle(on){document.body.classList.toggle('candlelight',on);ct.setAttribute('aria-pressed',on)}
-const pref=localStorage.getItem('zeus-candle');const h=new Date();const evening=(h.getHours()*60+h.getMinutes())>=1050||h.getHours()<5;
-setCandle(pref?pref==='1':evening);
-ct.onclick=()=>{const on=!document.body.classList.contains('candlelight');setCandle(on);localStorage.setItem('zeus-candle',on?'1':'0')};
+ document.querySelectorAll('.ld li button').forEach(b=>b.setAttribute('aria-current',b.dataset.l===l));document.getElementById('ldCur').textContent={de:'DE',en:'EN',el:'ΕΛ'}[l];fillPersons();updateStatus();}
+const ld=document.getElementById('ld'),ldB=document.getElementById('ldBtn');
+function ldSet(o){ld.classList.toggle('open',o);ldB.setAttribute('aria-expanded',o)}
+ldB.onclick=e=>{e.stopPropagation();ldSet(!ld.classList.contains('open'))};
+document.querySelectorAll('.ld li button').forEach(b=>b.onclick=()=>{applyLang(b.dataset.l);ldSet(false)});
+document.addEventListener('click',e=>{if(!ld.contains(e.target))ldSet(false)});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')ldSet(false)});
 function updateStatus(){const s=document.getElementById('status');if(!s)return;const d=new Date(),m=d.getHours()*60+d.getMinutes();s.textContent=d.getDay()===2?UI[LANG].closedT:(m>=1050&&m<1380?UI[LANG].open:UI[LANG].later)}
 /* Reservierung (Demo) */
 const f=document.getElementById('resForm'),fTime=document.getElementById('fTime'),fPers=document.getElementById('fPers'),fDate=document.getElementById('fDate');
