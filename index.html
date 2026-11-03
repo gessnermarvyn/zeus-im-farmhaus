@@ -43,7 +43,21 @@ p.lead{font-size:1.08rem;color:#3d424c;max-width:34em}
 /* header */
 header.top{position:fixed;top:0;left:0;right:0;z-index:50;transition:.4s;color:#fff}
 header.top.solid{background:#FAF8F3f2;backdrop-filter:blur(10px);color:var(--ink);box-shadow:0 1px 0 var(--line)}
-.bar{display:flex;align-items:center;justify-content:space-between;height:84px;gap:2rem}
+.bar{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;height:84px;gap:2rem}
+.bar .logo{justify-self:start}.menu-links{justify-self:center}
+.right{justify-self:end;display:flex;align-items:center;gap:1.4rem}
+.ld{position:relative}
+.ld>button{background:none;border:0;color:inherit;font:inherit;font-size:.72rem;letter-spacing:.2em;text-transform:uppercase;cursor:pointer;padding:.5rem .2rem;display:flex;align-items:center;gap:.45rem;opacity:.85}
+.ld>button:hover{opacity:1}.ld>button svg{width:9px;height:9px;transition:transform .25s}
+.ld.open>button svg{transform:rotate(180deg)}
+.ld ul{list-style:none;margin:0;padding:.35rem 0;position:absolute;top:calc(100% + 10px);right:-.6rem;min-width:150px;background:#FAF8F3;color:var(--ink);box-shadow:0 14px 34px #0002,0 0 0 1px var(--line);opacity:0;visibility:hidden;transform:translateY(-4px);transition:.2s}
+.ld.open ul{opacity:1;visibility:visible;transform:none}
+.ld li button{all:unset;box-sizing:border-box;width:100%;display:flex;justify-content:space-between;gap:1rem;padding:.6rem 1rem;font-size:.8rem;cursor:pointer}
+.ld li button small{color:var(--muted);font-size:.68rem;letter-spacing:.15em}
+.ld li button:hover,.ld li button:focus-visible{background:#E5F7AF66}
+.ld li button[aria-current=true]{display:none}
+.rsep{width:1px;height:22px;background:currentColor;opacity:.3}
+@media(max-width:1020px){.bar{display:flex;justify-content:space-between}.right{gap:.6rem}.rsep{display:none}}
 .logo{font-family:"Cormorant Garamond",serif;font-size:1.65rem;text-decoration:none;white-space:nowrap}
 .logo i{font-style:italic;opacity:.75}
 .menu-links{display:flex;gap:2.2rem;font-size:.74rem;letter-spacing:.2em;text-transform:uppercase}
@@ -194,6 +208,27 @@ footer .bottom{margin-top:70px;padding-top:28px;border-top:1px solid #ffffff14;d
 .hero h1{font-size:clamp(2.6rem,5.4vw,4.8rem)}
 @media(max-width:600px){.hero h1{font-size:2.4rem}.hero .tag{font-size:.98rem}.hero .upper .eyebrow{letter-spacing:.12em;font-size:.58rem;gap:.5rem;white-space:nowrap}.hero .upper .eyebrow::before,.hero .upper .eyebrow::after{width:14px}.hero .upper{padding:.8rem 1rem .9rem}}
 @media(max-width:860px){.hero .wrap{padding-top:78px}.hero img{object-position:46% 70%}}
+
+/* ===== PREVIEW FEATURES ===== */
+/* reservation form */
+.resv{display:grid;grid-template-columns:1fr 1.25fr;gap:72px;text-align:left;margin-top:3rem}
+.resv form{background:#fff;padding:2.4rem;border:1px solid var(--line);box-shadow:0 30px 60px -40px #26314955}
+.resv .grid{display:grid;grid-template-columns:1fr 1fr;gap:1.1rem 1.2rem}
+.resv label{display:block;font-size:.68rem;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin-bottom:.35rem}
+.resv input,.resv select,.resv textarea{width:100%;font:inherit;font-weight:400;font-size:.98rem;padding:.8rem .9rem;border:1px solid var(--line);background:var(--ivory);color:var(--ink);border-radius:0}
+.resv input:focus,.resv select:focus,.resv textarea:focus{outline:2px solid var(--olive);outline-offset:-1px}
+.resv .full{grid-column:1/-1}
+.resv .err{color:#9e3b1b;font-size:.78rem;min-height:1em;margin-top:.25rem}
+.resv .invalid{border-color:#9e3b1b}
+.resv button[type=submit]{margin-top:1.4rem;width:100%;justify-content:center;cursor:pointer;font-family:inherit}
+.resv .demo-note{font-size:.78rem;color:#9e3b1b;margin-top:.9rem;text-align:center}
+.confirm{display:none;text-align:center;padding:2rem 1rem}
+.confirm .ok{width:64px;height:64px;border-radius:50%;background:var(--green);display:grid;place-items:center;margin:0 auto 1.2rem;font-size:1.6rem;color:var(--ink)}
+.confirm h3{font-size:2rem;margin-bottom:.6rem}
+.confirm dl{display:grid;grid-template-columns:auto 1fr;gap:.3rem 1rem;text-align:left;max-width:340px;margin:1.4rem auto;font-size:.93rem}
+.confirm dt{color:var(--muted)}
+@media(max-width:900px){.resv{grid-template-columns:1fr;gap:40px}.resv form{padding:1.5rem}.resv .grid{grid-template-columns:1fr}}
+.demo-note.soft{color:var(--muted)}
 </style>
 </head>
 <body>
@@ -203,8 +238,8 @@ footer .bottom{margin-top:70px;padding-top:28px;border-top:1px solid #ffffff14;d
  <div class="wrap bar">
   <a class="logo" href="#top">Zeus <i>im Farmhaus</i></a>
   <nav class="menu-links" id="nav"><a href="#geschichte">Geschichte</a><a href="#karte">Essen</a><a href="#spezialitaeten">Spezialitäten</a><a href="#getraenke">Getränke</a><a href="#besuch">Anreise</a><a href="#hotel">Hotel</a></nav>
-  <a class="btn" href="#reservieren">Reservieren</a>
-  <button class="burger" aria-label="Menü öffnen" onclick="nav.classList.toggle('show')"><span></span><span></span></button>
+  <div class="right"><div class="ld" id="ld"><button id="ldBtn" aria-haspopup="listbox" aria-expanded="false"><span id="ldCur">DE</span><svg viewBox="0 0 10 6"><path d="M1 1l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.3"/></svg></button><ul role="listbox"><li><button data-l="de">Deutsch <small>DE</small></button></li><li><button data-l="en">English <small>EN</small></button></li><li><button data-l="el">Ελληνικά <small>ΕΛ</small></button></li></ul></div><span class="rsep"></span><a class="btn" href="#reservieren">Reservieren</a>
+  <button class="burger" aria-label="Menü öffnen" onclick="nav.classList.toggle('show')"><span></span><span></span></button></div>
  </div>
 </header>
 
@@ -301,7 +336,32 @@ footer .bottom{margin-top:70px;padding-top:28px;border-top:1px solid #ffffff14;d
 </section>
 
 <section id="reservieren">
- <div class="wrap r"><span class="eyebrow">Reservierung</span><h2>Ihr Tisch <em>erwartet Sie</em></h2><p class="lead" style="margin:0 auto">Reservieren Sie gern telefonisch oder per E-Mail – wir freuen uns auf Sie.</p><a class="big" href="tel:+495483749534">05483 749534</a><p><a href="mailto:info@zeus-im-farmhaus.de?subject=Tischreservierung">info@zeus-im-farmhaus.de</a></p></div>
+ <div class="wrap">
+  <div class="center r"><span class="eyebrow">Reservierung</span><h2>Ihr Tisch <em>erwartet Sie</em></h2><p class="lead">Reservieren Sie online – oder ganz klassisch unter <a href="tel:+495483749534">05483 749534</a>.</p></div>
+  <div class="resv">
+   <div class="r">
+    <h3 style="font-size:1.9rem;margin-bottom:1rem">So funktioniert’s</h3>
+    <p style="color:var(--muted)">Wählen Sie Datum, Uhrzeit und Personenzahl. Wir bestätigen Ihre Reservierung telefonisch oder per E-Mail.</p>
+    <div class="ways" style="margin-top:1.4rem"><div><b>Öffnungszeiten</b> — Mi – Mo, 17:30 – 23:00</div><div><b>Dienstag</b> — Ruhetag</div><div><b>Gruppen ab 9 Personen</b> — bitte telefonisch</div></div>
+   </div>
+   <form id="resForm" novalidate class="r">
+    <div id="formBody">
+    <div class="grid">
+     <div class="full"><label for="fName">Name</label><input id="fName" name="name" autocomplete="name" required><div class="err"></div></div>
+     <div><label for="fTel">Telefon</label><input id="fTel" name="tel" type="tel" autocomplete="tel" required><div class="err"></div></div>
+     <div><label for="fMail">E-Mail</label><input id="fMail" name="email" type="email" autocomplete="email" required><div class="err"></div></div>
+     <div><label for="fDate">Datum</label><input id="fDate" name="date" type="date" required><div class="err"></div></div>
+     <div><label for="fTime">Uhrzeit</label><select id="fTime" name="time" required></select><div class="err"></div></div>
+     <div class="full"><label for="fPers">Personen</label><select id="fPers" name="persons" required></select><div class="err"></div></div>
+     <div class="full"><label for="fMsg">Nachricht (optional)</label><textarea id="fMsg" name="message" rows="3"></textarea></div>
+    </div>
+    <button class="btn solid" type="submit">Tisch anfragen</button>
+    <p class="demo-note soft">Online-Reservierung in Kürze – bis dahin bitte telefonisch: 05483 749534</p>
+    </div>
+    <div class="confirm" id="confirm"><div class="ok">✓</div><h3>Vielen Dank!</h3><p>Ihre Anfrage ist eingegangen. Wir melden uns zur Bestätigung.</p><dl id="sum"></dl><p class="demo-note">Vorschau / Demo – diese Anfrage wurde NICHT an das Restaurant gesendet.</p><button type="button" class="btn" id="again" style="margin-top:1rem;cursor:pointer;font-family:inherit;background:none">Neue Anfrage</button></div>
+   </form>
+  </div>
+ </div>
 </section>
 
 <footer>
@@ -354,4 +414,5 @@ function settle(){if(done)return;done=true;
 if(sessionStorage.getItem('z')||matchMedia('(prefers-reduced-motion: reduce)').matches){doors.remove();document.body.classList.add('ready')}
 else{sessionStorage.setItem('z',1);document.readyState==='complete'?settle():addEventListener('load',settle);setTimeout(settle,6000)}
 </script>
+<script src="preview.js"></script>
 </body></html>
