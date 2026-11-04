@@ -1,13 +1,33 @@
 <!doctype html>
-<html lang="de"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex">
+<html lang="de" class="locked"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex">
+<style>html.locked{visibility:hidden}</style>
 <title>Wirt-Übersicht · Zeus im Farmhaus (Demo)</title>
+<script src="js/auth-config.js"></script>
+<script>
+(function () {
+  var cfg = window.ZEUS_AUTH || {};
+  if (!String(cfg.BACKEND_URL || '').trim()) { location.replace('intern.html'); return; }
+  try {
+    var raw = JSON.parse(localStorage.getItem('zeus-owner-session') || 'null');
+    if (!raw || !raw.token || !raw.expiresAt || raw.expiresAt <= Date.now()) {
+      localStorage.removeItem('zeus-owner-session');
+      location.replace('intern.html');
+    }
+  } catch (e) {
+    location.replace('intern.html');
+  }
+})();
+</script>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
+html.locked{visibility:hidden}
 :root{--ivory:#FAF8F3;--paper:#F3EFE6;--ink:#1E232D;--muted:#6B6F78;--line:#E3DED3;--green:#E5F7AF;--olive:#5E7039;--navy:#263149}
 *{box-sizing:border-box;margin:0;padding:0}body{font-family:Inter,sans-serif;font-weight:300;background:var(--ivory);color:var(--ink);line-height:1.6}
 h1,h2,h3{font-family:"Cormorant Garamond",serif;font-weight:400}
 .top{background:var(--navy);color:#fff;padding:1.4rem 0}.wrap{max-width:1100px;margin:auto;padding:0 24px}
 .top .wrap{display:flex;justify-content:space-between;align-items:center;gap:1rem;flex-wrap:wrap}.top h1{font-size:1.9rem}.top h1 i{color:var(--green)}
+.top-actions{display:flex;gap:.85rem;align-items:center;flex-wrap:wrap}
+.top-actions a,.top-actions button{background:none;border:0;color:var(--green);font:inherit;font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;text-decoration:none;padding:.2rem 0}
 .badge{background:#9e3b1b;color:#fff;font-size:.68rem;letter-spacing:.18em;text-transform:uppercase;padding:.45rem .8rem}
 .note{background:#fff4e5;border:1px solid #f0d3a8;padding:1rem 1.2rem;margin:2rem 0;font-size:.9rem}
 .kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin:1.5rem 0 2.5rem}
@@ -23,7 +43,7 @@ th,td{padding:.8rem 1rem;text-align:left;border-bottom:1px solid var(--line)}th{
 .slots{display:flex;gap:4px;align-items:flex-end;height:90px;margin:1rem 0 2.5rem}.slots div{flex:1;background:var(--navy);opacity:.85;position:relative}.slots span{position:absolute;bottom:-1.4rem;left:50%;transform:translateX(-50%);font-size:.62rem;color:var(--muted);white-space:nowrap}
 @media(max-width:800px){.kpis{grid-template-columns:1fr 1fr}.days{grid-template-columns:repeat(4,1fr)}table{font-size:.82rem}th:nth-child(5),td:nth-child(5){display:none}}
 </style></head><body>
-<div class="top"><div class="wrap"><h1>Zeus <i>im Farmhaus</i> · Wirt-Übersicht</h1><span class="badge">Demo · Beispieldaten</span></div></div>
+<div class="top"><div class="wrap"><h1>Zeus <i>im Farmhaus</i> · Wirt-Übersicht</h1><div class="top-actions"><a href="intern.html#passwort">Passwort ändern</a><button type="button" id="logoutBtn">Abmelden</button><span class="badge">Demo · Beispieldaten</span></div></div></div>
 <div class="wrap">
 <div class="note"><b>Beispieldaten – Demo.</b> Alle Namen und Reservierungen auf dieser Seite sind erfunden und dienen nur zur Veranschaulichung. Im echten Betrieb würden hier die Online-Anfragen aus dem Reservierungsformular erscheinen (z. B. aus einer Google-Tabelle oder einem Reservierungsdienst). Tischnummern werden automatisch zugeteilt (16 Tische à 4 Plätze, Belegung ca. 2,5 Std.) und lassen sich in der Tabelle per Klick ändern. <a href="./">← zurück zur Vorschau</a></div>
 <h2 style="font-size:2.2rem">Diese Woche</h2>
@@ -33,7 +53,7 @@ th,td{padding:.8rem 1rem;text-align:left;border-bottom:1px solid var(--line)}th{
 <h3 style="font-size:1.4rem">Ankünfte nach Uhrzeit (Gäste)</h3>
 <div class="slots" id="slots"></div>
 <h3 style="font-size:1.4rem">Tischplan – frei / belegt</h3><div id="plan" style="display:flex;flex-wrap:wrap;gap:.4rem;margin-bottom:1.5rem"></div><table><thead><tr><th>Uhrzeit</th><th>Name</th><th>Gäste</th><th>Tisch-Nr.</th><th>Notiz</th><th>Status</th></tr></thead><tbody id="rows"></tbody></table>
-<p style="font-size:.8rem;color:var(--muted);margin:2rem 0 4rem">Demo-Seite · nicht öffentlich verlinkt · Beispieldaten</p>
+<p style="font-size:.8rem;color:var(--muted);margin:2rem 0 4rem">Demo-Seite · nur nach Anmeldung · Beispieldaten</p>
 </div>
 <script>
 const names=["Familie Becker","Müller","Schröder (Radgruppe)","Kowalski","Hoffmann","Papadopoulos","Wagner","Meyer","Schulz","Fischer","Weber","Krüger","Neumann","Lange","Brandt","Vogel","Dimitriou","Kaiser"];
@@ -62,4 +82,30 @@ week.forEach((d,i)=>{const rs=data(d),g=rs.reduce((s,r)=>s+r.g,0),b=document.cre
  b.innerHTML=`<small>${fmt(d,{weekday:'short',day:'numeric',month:'numeric'})}</small><b>${d.getDay()===2?'Ruhetag':g+' Gäste'}</b><div class="bar"><i style="width:${Math.min(100,g/60*100)}%"></i></div>`;
  if(d.getDay()!==2)b.onclick=()=>show(i);days.append(b)});
 show(week[0].getDay()===2?1:0);
+</script>
+<script src="js/auth.js"></script>
+<script>
+(async function () {
+  if (!ZeusAuth.configured()) { location.replace('intern.html'); return; }
+  var session = ZeusAuth.readSession();
+  if (!session) { location.replace('intern.html'); return; }
+  try {
+    var data = await ZeusAuth.call({ action: 'session', token: session.token });
+    if (!data.ok) {
+      ZeusAuth.clearSession();
+      location.replace('intern.html');
+      return;
+    }
+    if (data.expiresAt) ZeusAuth.writeSession({ token: session.token, expiresAt: data.expiresAt });
+    document.documentElement.classList.remove('locked');
+  } catch (e) {
+    location.replace('intern.html?offline=1');
+  }
+  document.getElementById('logoutBtn').onclick = async function () {
+    var current = ZeusAuth.readSession();
+    try { if (current) await ZeusAuth.call({ action: 'logout', token: current.token }); } catch (err) {}
+    ZeusAuth.clearSession();
+    location.replace('intern.html');
+  };
+})();
 </script></body></html>
