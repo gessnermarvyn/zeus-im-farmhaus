@@ -1,0 +1,350 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Neuerungen · Zeus im Farmhaus</title>
+<meta name="description" content="Für Georgios Tzaras und Panagiotis Koutelidas: was die neue Website von Zeus im Farmhaus schon kann, was noch eine Demo ist, und die nächsten Schritte.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{--cream:#FFFBF5;--navy:#263149;--green:#E5F7AF;--olive:#5E7039;--muted:#5C6474;--line:#E4E0D4;--ink:#263149}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:Inter,system-ui,sans-serif;font-weight:400;font-size:17px;line-height:1.65;color:var(--ink);background:var(--cream);-webkit-font-smoothing:antialiased}
+img{max-width:100%;height:auto;display:block}
+a{color:var(--olive)}
+a:hover{color:var(--navy)}
+h1,h2,h3{font-family:"Cormorant Garamond",Georgia,serif;font-weight:500;letter-spacing:-.01em;line-height:1.08;color:var(--navy)}
+.wrap{max-width:1080px;margin:0 auto;padding:0 24px}
+.top{background:var(--navy);color:var(--cream)}
+.top .wrap{display:flex;justify-content:space-between;align-items:center;gap:1rem;min-height:72px;flex-wrap:wrap;padding-top:14px;padding-bottom:14px}
+.brand{font-family:"Cormorant Garamond",Georgia,serif;font-size:1.55rem;color:var(--cream);text-decoration:none;font-weight:500}
+.brand i{font-style:italic;color:var(--green)}
+.top nav{display:flex;flex-wrap:wrap;gap:.35rem 1.1rem}
+.top nav a{color:#e7e4d8;text-decoration:none;font-size:.72rem;letter-spacing:.16em;text-transform:uppercase;padding:.4rem 0}
+.top nav a:hover{color:var(--green)}
+.banner{position:relative;min-height:78vh;color:var(--cream);display:flex;align-items:flex-end;background:#1a2436 center 62%/cover no-repeat}
+.banner::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,#0b0f1a55 0%,#0b0f1a18 42%,#0b0f1ad0 100%)}
+.banner .wrap{position:relative;z-index:1;padding-top:12vh;padding-bottom:8vh;width:100%}
+.panel{background:#263149e0;border:1px solid #E5F7AF40;padding:1.5rem 1.6rem 1.6rem;max-width:40rem;backdrop-filter:blur(3px)}
+.eyebrow{display:block;font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;color:var(--green);font-weight:500;margin-bottom:.7rem}
+h1{font-size:clamp(2.6rem,6vw,4.6rem);color:#fff;margin-bottom:.7rem}
+h1 em{font-style:italic;font-weight:500}
+.banner p{color:#f4f1e8;max-width:38rem;font-weight:300}
+.actions{display:flex;flex-wrap:wrap;gap:.7rem;margin-top:1.4rem}
+.btn{display:inline-flex;align-items:center;justify-content:center;padding:.9rem 1.2rem;font-size:.74rem;letter-spacing:.16em;text-transform:uppercase;text-decoration:none;font-weight:500;border:1px solid transparent;text-align:center}
+.btn.green{background:var(--green);color:var(--navy);border-color:var(--green)}
+.btn.green:hover{background:#fff;border-color:#fff;color:var(--navy)}
+.btn.light{color:#fff;border-color:#ffffffb0;background:transparent}
+.btn.light:hover{background:#fff;color:var(--navy)}
+.btn.solid{background:var(--navy);color:var(--cream);border-color:var(--navy)}
+.btn.solid:hover{background:var(--olive);border-color:var(--olive);color:#fff}
+.credit{margin-top:1rem;font-size:.72rem;letter-spacing:.08em;color:#ffffffc0}
+section{padding:76px 0}
+section.alt{background:#f6f3ea}
+h2{font-size:clamp(2.1rem,4vw,3.2rem);margin:.35rem 0 1rem}
+h2 em{font-style:italic;color:var(--olive)}
+h3{font-size:1.7rem;margin:1.6rem 0 .45rem}
+.lead{font-size:1.08rem;color:#3c4454;max-width:42rem}
+.kicker{font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;color:var(--olive);font-weight:500}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:28px 36px;margin-top:1.8rem}
+.card h3{margin-top:0}
+.card p+p{margin-top:.7rem}
+.muted{color:var(--muted)}
+.badges{display:flex;flex-wrap:wrap;gap:.5rem;margin:1.4rem 0 0}
+.badge{font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;padding:.35rem .6rem;font-weight:500}
+.badge.live{background:var(--green);color:var(--navy)}
+.badge.demo{background:var(--navy);color:var(--cream)}
+.badge.plan{background:transparent;color:var(--olive);box-shadow:inset 0 0 0 1px var(--olive)}
+.shots{display:grid;gap:16px;margin-top:1.8rem}
+.shots.two{grid-template-columns:1.35fr .75fr;align-items:start}
+.shots.pair{grid-template-columns:1fr 1fr}
+figure{margin:0}
+figure img{width:100%;border:1px solid var(--line);background:#fff}
+.phone{max-width:280px;margin-inline:auto}
+.phone img{border:1px solid var(--navy)}
+figcaption{font-size:.82rem;color:var(--muted);margin-top:.45rem;line-height:1.45}
+ul.clean{margin:.4rem 0 0 1.1rem}
+ul.clean li{margin:.28rem 0}
+ul.clean li::marker{color:var(--olive)}
+.note{background:#fff;border:1px solid var(--line);border-left:3px solid var(--olive);padding:1rem 1.15rem;margin-top:1.2rem}
+.note strong{font-weight:500}
+table{width:100%;border-collapse:collapse;background:#fff;border:1px solid var(--line);margin-top:1rem;font-size:.95rem}
+th,td{text-align:left;padding:.75rem 1rem;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);font-weight:500;background:#f6f3ea}
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:1.6rem}
+.step{background:#fff;border:1px solid var(--line);padding:1.2rem 1.15rem 1.3rem}
+.step b{display:block;font-family:"Cormorant Garamond",Georgia,serif;font-size:2rem;font-weight:500;color:var(--olive);line-height:1;margin-bottom:.4rem}
+.step h3{font-size:1.45rem;margin:0 0 .4rem}
+.url{display:block;margin-top:1rem;padding:.85rem 1rem;background:var(--navy);color:var(--green);text-decoration:none;overflow-wrap:anywhere;font-size:.92rem}
+.url:hover{color:#fff}
+footer{background:var(--navy);color:#d5d3c8;padding:48px 0 36px;font-size:.9rem}
+footer a{color:var(--green)}
+footer .wrap{display:flex;justify-content:space-between;gap:1.2rem;flex-wrap:wrap}
+@media(max-width:860px){
+  .grid,.shots.two,.shots.pair,.steps{grid-template-columns:1fr}
+  section{padding:56px 0}
+  .banner{min-height:auto}
+  .panel{padding:1.15rem 1.05rem 1.2rem}
+  .phone{max-width:100%}
+}
+@media(max-width:520px){
+  .actions .btn{width:100%}
+  .top nav{gap:.4rem .8rem}
+}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+<header class="top">
+ <div class="wrap">
+  <a class="brand" href="#anfang">Zeus <i>im Farmhaus</i></a>
+  <nav aria-label="Abschnitte dieser Übersicht">
+   <a href="#eindruck">Eindruck</a>
+   <a href="#sprachen">Sprachen</a>
+   <a href="#inhalt">Inhalt</a>
+   <a href="#reservierung">Reservierung</a>
+   <a href="#wirt">Wirt</a>
+   <a href="#naechste">Nächste Schritte</a>
+  </nav>
+ </div>
+</header>
+
+<div class="banner" id="anfang" style="background-image:url(img/farmhaus.jpg)">
+ <div class="wrap">
+  <div class="panel">
+   <span class="eyebrow">Für Georgios „Zeus“ Tzaras und Panagiotis Koutelidas</span>
+   <h1>Was die neue Website <em>schon kann</em></h1>
+   <p>Eine kurze Führung durch die Seite von Zeus im Farmhaus in Lienen. Alles hier ist auf Deutsch. Die Bilder sind von der Website selbst, aufgenommen am 4. November 2026. Diese Übersicht ist nicht im Menü für Gäste verlinkt.</p>
+   <div class="actions">
+    <a class="btn green" href="./">Die Website ansehen</a>
+    <a class="btn light" href="wirt.html">Wirt-Übersicht</a>
+   </div>
+   <p class="credit">Titelfoto: Dierkschneider / Altes Farmhaus Lienen</p>
+  </div>
+ </div>
+</div>
+
+<main>
+<section>
+ <div class="wrap">
+  <span class="kicker">Zum Weitergeben</span>
+  <h2>Diese Seite, <em>dieser Link</em></h2>
+  <p class="lead">Die Restaurant-Website ist schon öffentlich. Diese Übersicht erreichen Sie nur über den Link. Im Menü für Gäste steht sie nicht.</p>
+  <a class="url" href="https://gessnermarvyn.github.io/zeus-im-farmhaus/neuerungen.html">https://gessnermarvyn.github.io/zeus-im-farmhaus/neuerungen.html</a>
+  <div class="badges" aria-label="Stand der Funktionen">
+   <span class="badge live">Live · für Gäste sichtbar</span>
+   <span class="badge demo">Demo · noch ohne echte Buchung</span>
+   <span class="badge plan">Geplant · nächster Schritt</span>
+  </div>
+ </div>
+</section>
+
+<section class="alt" id="eindruck">
+ <div class="wrap">
+  <span class="kicker">Live</span>
+  <h2>Der erste <em>Eindruck</em></h2>
+  <p class="lead">Oben auf der Website steht das echte Farmhaus. Der Name liegt auf dem Dach, der Text bleibt lesbar, und beim ersten Öffnen geht die Seite wie eine Tür auf.</p>
+  <div class="grid">
+   <article class="card">
+    <h3>Foto und Name auf dem Dach</h3>
+    <p>Das große Bild ist das Foto des Alten Farmhauses am Dorfteich, kein Platzhalter. Auf dem Computer ist es größer gezeigt, sodass „Zeus im Farmhaus“ über dem Dach steht. Darunter: „Griechische Küche im Fachwerkhaus von 1650“.</p>
+    <p class="muted">Auf dem Handy sitzt der Name oben im Lesefeld, das Haus darunter. Unten gibt es eine Leiste: Anrufen und Speisekarte.</p>
+   </article>
+   <article class="card">
+    <h3>Lesefeld, das beim Scrollen ausblendet</h3>
+    <p>Der Text liegt auf einem dunklen Feld in Navy, mit einem feinen hellgrünen Rand. So bleibt er auf dem Foto lesbar. Scrollt man nach unten, wird dieses Feld Schritt für Schritt durchsichtig. Das Foto bleibt sichtbar.</p>
+    <h3>Münze, dann die Türen</h3>
+    <p>Beim ersten Öffnen dreht sich eine Zeus-Münze. Danach gehen zwei Flügel auseinander. Lädt man die Seite im selben Tab neu, entfällt die Einleitung. Wer am Gerät weniger Bewegung eingestellt hat, sieht sie gar nicht.</p>
+    <p class="muted">Die Münze ist eine antike Tetradrachme Philipps II. Der Hinweis steht im Fuß der Website, mit Quelle und Lizenz.</p>
+   </article>
+  </div>
+  <div class="shots two">
+   <figure>
+    <img src="img/neuerungen/hero.jpg" width="1280" height="820" alt="Startseite: Foto des Fachwerkhauses, der Name Zeus im Farmhaus auf einem dunklen Feld über dem Dach, Öffnungszeiten unten rechts">
+    <figcaption>Angekommen auf der Seite: Name auf dem Dach, Lesefeld und Öffnungszeiten.</figcaption>
+   </figure>
+   <figure class="phone">
+    <img src="img/neuerungen/hero-mobil.jpg" width="390" height="844" alt="Dieselbe Startseite auf einem schmalen Bildschirm, Name im Lesefeld, darunter das Haus, unten Anrufen und Speisekarte">
+    <figcaption>Auf dem Handy.</figcaption>
+   </figure>
+  </div>
+  <div class="shots pair">
+   <figure>
+    <img src="img/neuerungen/hero-fade.jpg" width="1280" height="860" alt="Dieselbe Startseite nach dem Scrollen: das dunkle Textfeld ist weg, das Fachwerkhaus und die Terrasse bleiben sichtbar">
+    <figcaption>Nach dem Scrollen ist das große Textfeld ausgeblendet. Das Foto bleibt.</figcaption>
+   </figure>
+   <figure>
+    <img src="img/neuerungen/intro.jpg" width="1280" height="820" alt="Einleitung: goldene Zeus-Münze in der Mitte, die beiden Türflügel öffnen sich und geben das Foto des Hauses frei">
+    <figcaption>Die Münze, dann öffnen sich die Türen. Nur beim ersten Mal in einem Tab.</figcaption>
+   </figure>
+  </div>
+ </div>
+</section>
+
+<section id="sprachen">
+ <div class="wrap">
+  <span class="kicker">Live</span>
+  <h2>Deutsch, Englisch, <em>Griechisch</em></h2>
+  <p class="lead">Oben rechts steht die Sprache: DE, EN oder ΕΛ. Ein Klick öffnet Deutsch, English und Ελληνικά. Die gewählte Sprache bleibt auf diesem Gerät gespeichert.</p>
+  <p style="margin-top:.8rem;max-width:42rem">Es wechseln die Navigation, die Speisekarte, die Zeiten, der Hoteltext und das Reservierungsformular. Die aktuelle Sprache steht auf dem Knopf und nicht noch einmal in der Liste.</p>
+  <div class="shots">
+   <figure>
+    <img src="img/neuerungen/sprachen.jpg" width="1280" height="280" alt="Kopf der Website mit geöffnetem Sprachmenü: English EN und Ελληνικά ΕΛ, der Knopf zeigt DE">
+    <figcaption>Das Sprachmenü. Hier ist Deutsch gewählt, deshalb zeigt die Liste Englisch und Griechisch.</figcaption>
+   </figure>
+  </div>
+ </div>
+</section>
+
+<section class="alt" id="inhalt">
+ <div class="wrap">
+  <span class="kicker">Live</span>
+  <h2>Karte, Zeiten, Hotel <em>und Lage</em></h2>
+  <div class="grid">
+   <article class="card">
+    <h3>Speisekarte</h3>
+    <p>Vorspeisen, Salate, Vegetarisch, Hauptgerichte, Grill &amp; Fisch und Desserts, mit Preis und kurzer Beschreibung. Allergene stehen als Buchstaben dabei: A Gluten, C Ei, D Fisch, G Milch/Laktose. Unten gibt es den Link zur Speisekarte als PDF. Getränke haben einen eigenen Abschnitt, ebenfalls mit PDF.</p>
+   </article>
+   <article class="card">
+    <h3>Öffnungszeiten</h3>
+    <p>Mittwoch bis Montag, 17:30 bis 23:00 Uhr. Dienstag ist Ruhetag. Ein kleiner Punkt sagt, ob gerade geöffnet ist, ob heute Ruhetag ist, oder dass ab 17:30 geöffnet wird.</p>
+    <p>Adresse: Zum Teich 1, 49536 Lienen. Telefon <a href="tel:+495483749534">05483 749534</a>. E-Mail <a href="mailto:info@zeus-im-farmhaus.de">info@zeus-im-farmhaus.de</a>. Dazu „Route planen“ und die Anreise mit Auto, Bahn, Bus und Fahrrad.</p>
+   </article>
+   <article class="card">
+    <h3>Karte</h3>
+    <p>Unter der Anreise liegt eine OpenStreetMap-Karte mit einer Markierung in Lienen.</p>
+   </article>
+   <article class="card">
+    <h3>Hotel Altes Farmhaus</h3>
+    <p>Im selben Haus. 90&nbsp;€ pro Nacht im Doppelzimmer. Check-in ab 14:00 Uhr, Check-out bis 10:00 Uhr. Telefon 05483 8363, plus ein Link zur Hotel-Website.</p>
+   </article>
+  </div>
+  <div class="shots pair">
+   <figure>
+    <img src="img/neuerungen/speisekarte.jpg" width="1280" height="860" alt="Speisekarte auf der Website: Reiter Vorspeisen bis Desserts, Gerichte wie Tzatziki und Dakos mit Preisen">
+    <figcaption>Die Speisekarte, hier der Reiter Vorspeisen.</figcaption>
+   </figure>
+   <figure>
+    <img src="img/neuerungen/besuch.jpg" width="1280" height="860" alt="Öffnungszeiten Mittwoch bis Montag 17:30 bis 23:00, Dienstag Ruhetag, Adresse Zum Teich 1 und Telefon">
+    <figcaption>Zeiten, Adresse und Anreise. „Jetzt geöffnet“ gilt nur zur jeweiligen Uhrzeit.</figcaption>
+   </figure>
+  </div>
+  <div class="shots pair">
+   <figure>
+    <img src="img/neuerungen/karte-osm.jpg" width="1280" height="860" alt="Graue OpenStreetMap-Karte von Lienen mit einer Markierung an der L 591">
+    <figcaption>Die Karte unter der Anreise.</figcaption>
+   </figure>
+   <figure>
+    <img src="img/neuerungen/hotel.jpg" width="1280" height="860" alt="Hotel Altes Farmhaus: Foto des Hauses, 90 Euro pro Nacht, Check-in ab 14 Uhr, Check-out bis 10 Uhr">
+    <figcaption>Hotel im selben Haus, mit Preis und Zeiten.</figcaption>
+   </figure>
+  </div>
+ </div>
+</section>
+
+<section id="reservierung">
+ <div class="wrap">
+  <span class="kicker">Demo</span>
+  <h2>Tisch reservieren, <em>noch ohne Versand</em></h2>
+  <p class="lead">Das Formular steht auf der Website. Eine Anfrage geht daraus noch nicht heraus. Bis die echte Buchung da ist, bleibt das Telefon der Weg: <a href="tel:+495483749534">05483 749534</a>.</p>
+  <div class="grid">
+   <article class="card">
+    <h3>Was das Formular schon prüft</h3>
+    <ul class="clean">
+     <li>Name, Telefon, E-Mail, Datum, Uhrzeit, Personen, dazu eine Nachricht nach Wunsch.</li>
+     <li>Uhrzeiten von 17:30 bis 22:00, alle 15 Minuten. Voreingestellt ist 19:00 Uhr.</li>
+     <li>Personen von 1 bis 8. Ab 9 Personen steht im Menü: bitte anrufen.</li>
+     <li>Dienstag wird abgelehnt, ein Datum in der Vergangenheit auch.</li>
+    </ul>
+   </article>
+   <article class="card">
+    <h3>Was noch nicht passiert</h3>
+    <p>Unter dem Knopf steht: „Online-Reservierung in Kürze – bis dahin bitte telefonisch“. Nach dem Absenden erscheint derselbe Hinweis, plus eine Zusammenfassung der Eingaben. Es wird keine E-Mail geschickt und nichts gespeichert.</p>
+    <div class="note"><strong>Geplant, noch nicht eingebaut.</strong> Echte Buchungen, eine Bestätigung per E-Mail und ein Link zum Absagen. Bis 6 Personen bis 24 Stunden vorher, bei größeren Gruppen bis 2 Tage vorher.</div>
+   </article>
+  </div>
+  <table>
+   <caption class="muted" style="caption-side:bottom;text-align:left;padding-top:.5rem">Diese Fristen sind die Absprache für den nächsten Schritt. Sie stehen noch nicht in der Website.</caption>
+   <thead><tr><th>Gruppe</th><th>Absagen</th></tr></thead>
+   <tbody>
+    <tr><td>Bis 6 Personen</td><td>bis 24 Stunden vor der Reservierung</td></tr>
+    <tr><td>Größere Gruppen</td><td>bis 2 Tage vorher</td></tr>
+   </tbody>
+  </table>
+  <div class="shots">
+   <figure>
+    <img src="img/neuerungen/reservierung.jpg" width="1180" height="1040" alt="Reservierungsformular mit Name, Telefon, E-Mail, Datum, Uhrzeit 19:00, 2 Personen und dem Hinweis, dass die Online-Reservierung in Kürze folgt">
+    <figcaption>Das Formular auf der Website. Der Satz unter dem Knopf sagt, dass noch telefonisch reserviert wird.</figcaption>
+   </figure>
+  </div>
+ </div>
+</section>
+
+<section class="alt" id="wirt">
+ <div class="wrap">
+  <span class="kicker">Demo · nur für Sie</span>
+  <h2>Die Übersicht <em>für den Wirt</em></h2>
+  <p class="lead">Eine eigene Seite, nicht im Menü und nicht für die Suche gedacht. Sie zeigt, wie die Buchungen später bei Ihnen ankommen könnten.</p>
+  <div class="actions">
+   <a class="btn solid" href="wirt.html">Wirt-Übersicht öffnen</a>
+  </div>
+  <p class="muted" style="margin-top:.9rem;overflow-wrap:anywhere">Direktlink: <a href="https://gessnermarvyn.github.io/zeus-im-farmhaus/wirt.html">https://gessnermarvyn.github.io/zeus-im-farmhaus/wirt.html</a></p>
+  <div class="grid">
+   <article class="card">
+    <h3>Tischnummern</h3>
+    <p>Im Beispiel gibt es 16 Tische mit je 4 Plätzen. Eine Belegung dauert etwa zweieinhalb Stunden. Braucht eine Gesellschaft mehr als einen Tisch, stehen die Nummern zusammen, zum Beispiel „Tisch 5–6“. Die Nummer lässt sich in der Tabelle ändern.</p>
+   </article>
+   <article class="card">
+    <h3>Frei und belegt</h3>
+    <p>Der Tischplan färbt freie Tische hellgrün und belegte dunkel. Darüber: die Woche, die Gästezahl und die Ankünfte nach Uhrzeit. Dienstag bleibt der Ruhetag.</p>
+    <p class="muted">Alle Namen sind erfunden. Die Zahlen sind nur zur Ansicht und ändern sich. Im echten Betrieb stünden hier die Anfragen aus dem Formular.</p>
+   </article>
+  </div>
+  <div class="shots">
+   <figure>
+    <img src="img/neuerungen/wirt.jpg" width="1100" height="1400" alt="Wirt-Übersicht mit Wochenleiste, Kennzahlen, Tischplan frei und belegt und einer Tabelle, in der bei acht Gästen Tisch 5–6 steht">
+    <figcaption>Beispiel vom 4. November 2026. Unten in der Tabelle: acht Gäste, Tisch 5–6. Die Namen sind nicht echt.</figcaption>
+   </figure>
+  </div>
+ </div>
+</section>
+
+<section id="naechste">
+ <div class="wrap">
+  <span class="kicker">Geplant</span>
+  <h2>Nächste <em>Schritte</em></h2>
+  <p class="lead">Drei Dinge, damit aus der Vorschau der Alltag im Restaurant wird.</p>
+  <div class="steps">
+   <article class="step">
+    <b>01</b>
+    <h3>Echte Reservierung</h3>
+    <p>Anfragen speichern, Bestätigung per E-Mail und ein Link zum Absagen: bis 6 Personen bis 24 Stunden vorher, größere Gruppen bis 2 Tage vorher.</p>
+   </article>
+   <article class="step">
+    <b>02</b>
+    <h3>Impressum und Datenschutz</h3>
+    <p>Im Fuß der Website stehen noch Platzhalter für Betreiber, Rechtsform und USt-IdNr. Datenschutz ist noch kein eigener Text. Dafür brauchen wir Ihre Angaben.</p>
+   </article>
+   <article class="step">
+    <b>03</b>
+    <h3>Eigene Domain</h3>
+    <p>Die neue Seite liegt unter der GitHub-Adresse. Als Nächstes kann sie unter zeus-im-farmhaus.de erreichbar sein.</p>
+   </article>
+  </div>
+  <p style="margin-top:1.6rem">Bis dahin erreichen Gäste Sie wie bisher unter <a href="tel:+495483749534">05483 749534</a>.</p>
+ </div>
+</section>
+</main>
+
+<footer>
+ <div class="wrap">
+  <p>Zeus im Farmhaus · Zum Teich 1 · 49536 Lienen<br>Diese Übersicht ist nicht im Menü der Website verlinkt.</p>
+  <p><a href="./">Zur Website</a><br><a href="wirt.html">Zur Wirt-Übersicht</a></p>
+ </div>
+</footer>
+</body>
+</html>
