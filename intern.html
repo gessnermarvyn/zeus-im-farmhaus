@@ -1,0 +1,283 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex">
+<meta name="referrer" content="no-referrer">
+<title>Anmeldung · Zeus im Farmhaus</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;1,500&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--cream:#FFFBF5;--navy:#263149;--green:#E5F7AF;--olive:#5E7039;--muted:#5C6474;--line:#E4E0D4}
+*{box-sizing:border-box;margin:0;padding:0}
+body{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:32px 18px;background:var(--cream);color:var(--navy);font-family:Inter,system-ui,sans-serif;font-weight:400;line-height:1.55}
+.card{width:min(440px,100%)}
+.eyebrow{font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;color:var(--olive);font-weight:500}
+h1{font-family:"Cormorant Garamond",Georgia,serif;font-weight:500;font-size:clamp(2.3rem,6vw,3.1rem);line-height:1.05;margin:.45rem 0 .4rem}
+.lead{color:var(--muted);font-size:.98rem}
+label{display:block;margin:1rem 0 .35rem;font-size:.68rem;letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
+input{width:100%;font:inherit;font-size:1rem;padding:.85rem .9rem;border:1px solid var(--line);background:#fff;color:var(--navy);border-radius:0}
+input:focus{outline:2px solid var(--olive);outline-offset:-1px}
+button,.btn{font:inherit}
+.primary{width:100%;margin-top:1.15rem;background:var(--navy);color:var(--cream);border:1px solid var(--navy);padding:.95rem 1rem;letter-spacing:.16em;text-transform:uppercase;font-size:.74rem;font-weight:500;cursor:pointer}
+.primary:hover{background:var(--olive);border-color:var(--olive)}
+.primary:disabled{opacity:.6;cursor:wait}
+.textbtn{display:inline-block;margin-top:.9rem;padding:.35rem 0;background:none;border:0;color:var(--olive);cursor:pointer;font-size:.95rem}
+.textbtn:hover{color:var(--navy)}
+.notice,.msg{margin-top:1.1rem;padding:.95rem 1rem;background:#fff;border:1px solid var(--olive);font-size:.95rem}
+.msg[hidden],.notice[hidden],form[hidden],section[hidden]{display:none}
+.row{display:flex;gap:.8rem;flex-wrap:wrap;align-items:center;margin-top:1.1rem}
+a.solid{display:inline-flex;align-items:center;justify-content:center;background:var(--green);color:var(--navy);text-decoration:none;padding:.85rem 1rem;letter-spacing:.14em;text-transform:uppercase;font-size:.74rem;font-weight:500}
+a.solid:hover{background:#fff}
+.back{margin-top:1.8rem;font-size:.85rem}
+.back a{color:var(--muted)}
+</style>
+</head>
+<body>
+<main class="card">
+ <p class="eyebrow">Zeus im Farmhaus</p>
+ <h1 id="title">Anmeldung</h1>
+ <p class="lead" id="lead">Nur für den Wirt.</p>
+ <div class="notice" id="notice" hidden></div>
+ <p class="msg" id="msg" role="status" hidden></p>
+
+ <form id="login" hidden>
+  <label for="password">Passwort</label>
+  <input id="password" name="password" type="password" autocomplete="current-password" required>
+  <button class="primary" type="submit">Anmelden</button>
+  <button class="textbtn" type="button" id="showForgot">Passwort vergessen</button>
+ </form>
+
+ <form id="forgot" hidden>
+  <p class="lead" id="mailTo"></p>
+  <button class="primary" type="submit">Link senden</button>
+  <button class="textbtn" type="button" id="backLogin">Zurück zur Anmeldung</button>
+ </form>
+
+ <form id="reset" hidden>
+  <label for="resetA">Neues Passwort</label>
+  <input id="resetA" type="password" autocomplete="new-password" required minlength="10">
+  <label for="resetB">Neues Passwort wiederholen</label>
+  <input id="resetB" type="password" autocomplete="new-password" required minlength="10">
+  <button class="primary" type="submit">Passwort speichern</button>
+ </form>
+
+ <section id="account" hidden>
+  <div class="row"><a class="solid" href="wirt.html">Zur Wirt-Übersicht</a></div>
+  <form id="change">
+   <label for="oldPassword">Altes Passwort</label>
+   <input id="oldPassword" type="password" autocomplete="current-password" required>
+   <label for="newA">Neues Passwort</label>
+   <input id="newA" type="password" autocomplete="new-password" required minlength="10">
+   <label for="newB">Neues Passwort wiederholen</label>
+   <input id="newB" type="password" autocomplete="new-password" required minlength="10">
+   <button class="primary" type="submit">Passwort ändern</button>
+  </form>
+  <button class="textbtn" type="button" id="logout">Abmelden</button>
+ </section>
+
+ <p class="back"><a href="./">Zur Website</a></p>
+</main>
+<script src="js/auth-config.js"></script>
+<script src="js/auth.js"></script>
+<script>
+(function () {
+  var notice = document.getElementById('notice');
+  var msg = document.getElementById('msg');
+  var login = document.getElementById('login');
+  var forgot = document.getElementById('forgot');
+  var reset = document.getElementById('reset');
+  var account = document.getElementById('account');
+  var title = document.getElementById('title');
+  var lead = document.getElementById('lead');
+  var resetToken = '';
+
+  function hideMsg() { msg.hidden = true; msg.textContent = ''; }
+  function say(code, retryAfterSec) {
+    var text = ZeusAuth.MSG[code] || ZeusAuth.MSG.server;
+    if (code === 'rate_limited' && retryAfterSec) {
+      var min = Math.max(1, Math.ceil(retryAfterSec / 60));
+      text += ' Etwa ' + min + (min === 1 ? ' Minute.' : ' Minuten.');
+    }
+    msg.hidden = false;
+    msg.textContent = text;
+  }
+  function showOnly(name) {
+    login.hidden = name !== 'login';
+    forgot.hidden = name !== 'forgot';
+    reset.hidden = name !== 'reset';
+    account.hidden = name !== 'account';
+    notice.hidden = name !== 'notice';
+  }
+  function busy(form, on) {
+    form.querySelectorAll('button').forEach(function (b) { b.disabled = on; });
+  }
+  function passwordsMatch(a, b) {
+    if (a.length < 10) { say('weak'); return false; }
+    if (a !== b) { say('mismatch'); return false; }
+    return true;
+  }
+  function mailLine() {
+    var email = String(ZeusAuth.cfg().OWNER_EMAIL || '').trim();
+    document.getElementById('mailTo').textContent = email
+      ? 'Der Link geht an ' + email + '. Er gilt eine Stunde und funktioniert nur einmal.'
+      : 'Der Link geht an die im System hinterlegte Adresse. Er gilt eine Stunde und funktioniert nur einmal.';
+  }
+
+  document.getElementById('showForgot').onclick = function () {
+    hideMsg();
+    title.textContent = 'Passwort vergessen';
+    lead.textContent = 'Wir senden einen Link zum Zurücksetzen.';
+    mailLine();
+    showOnly('forgot');
+  };
+  document.getElementById('backLogin').onclick = function () {
+    hideMsg();
+    title.textContent = 'Anmeldung';
+    lead.textContent = 'Nur für den Wirt.';
+    showOnly('login');
+  };
+
+  login.addEventListener('submit', async function (e) {
+    e.preventDefault();
+    hideMsg();
+    busy(login, true);
+    try {
+      var data = await ZeusAuth.call({ action: 'login', password: document.getElementById('password').value });
+      if (!data.ok) { say(data.error || 'server', data.retryAfterSec); return; }
+      ZeusAuth.writeSession(data);
+      location.replace('wirt.html');
+    } catch (err) {
+      say(err.code || 'unreachable');
+    } finally {
+      busy(login, false);
+    }
+  });
+
+  forgot.addEventListener('submit', async function (e) {
+    e.preventDefault();
+    hideMsg();
+    busy(forgot, true);
+    try {
+      var data = await ZeusAuth.call({ action: 'forgot' });
+      if (!data.ok) { say(data.error || 'server', data.retryAfterSec); return; }
+      say('sent');
+    } catch (err) {
+      say(err.code || 'unreachable');
+    } finally {
+      busy(forgot, false);
+    }
+  });
+
+  reset.addEventListener('submit', async function (e) {
+    e.preventDefault();
+    hideMsg();
+    var a = document.getElementById('resetA').value;
+    var b = document.getElementById('resetB').value;
+    if (!passwordsMatch(a, b)) return;
+    busy(reset, true);
+    try {
+      var data = await ZeusAuth.call({ action: 'reset', token: resetToken, newPassword: a });
+      if (!data.ok) { say(data.error || 'server', data.retryAfterSec); return; }
+      resetToken = '';
+      title.textContent = 'Anmeldung';
+      lead.textContent = 'Nur für den Wirt.';
+      showOnly('login');
+      say('reset_ok');
+    } catch (err) {
+      say(err.code || 'unreachable');
+    } finally {
+      busy(reset, false);
+    }
+  });
+
+  document.getElementById('change').addEventListener('submit', async function (e) {
+    e.preventDefault();
+    hideMsg();
+    var oldPassword = document.getElementById('oldPassword').value;
+    var a = document.getElementById('newA').value;
+    var b = document.getElementById('newB').value;
+    if (oldPassword === a) { say('same'); return; }
+    if (!passwordsMatch(a, b)) return;
+    var session = ZeusAuth.readSession();
+    if (!session) { showOnly('login'); say('session'); return; }
+    busy(account, true);
+    try {
+      var data = await ZeusAuth.call({ action: 'change', token: session.token, oldPassword: oldPassword, newPassword: a });
+      if (!data.ok) {
+        if (data.error === 'session') { ZeusAuth.clearSession(); showOnly('login'); }
+        say(data.error || 'server', data.retryAfterSec);
+        return;
+      }
+      ZeusAuth.writeSession(data);
+      document.getElementById('oldPassword').value = '';
+      document.getElementById('newA').value = '';
+      document.getElementById('newB').value = '';
+      say('changed');
+    } catch (err) {
+      say(err.code || 'unreachable');
+    } finally {
+      busy(account, false);
+    }
+  });
+
+  document.getElementById('logout').onclick = async function () {
+    var session = ZeusAuth.readSession();
+    try { if (session) await ZeusAuth.call({ action: 'logout', token: session.token }); } catch (e) {}
+    ZeusAuth.clearSession();
+    title.textContent = 'Anmeldung';
+    lead.textContent = 'Nur für den Wirt.';
+    hideMsg();
+    showOnly('login');
+  };
+
+  async function init() {
+    var hash = location.hash || '';
+    var found = hash.match(/^#reset=([A-Za-z0-9_-]{20,})$/);
+    if (found) {
+      resetToken = found[1];
+      history.replaceState(null, '', location.pathname + location.search);
+    }
+    var wantPassword = hash === '#passwort';
+    if (!ZeusAuth.configured()) {
+      title.textContent = 'Anmeldung';
+      lead.textContent = 'Nur für den Wirt.';
+      notice.textContent = ZeusAuth.MSG.inactive;
+      showOnly('notice');
+      return;
+    }
+    mailLine();
+    if (resetToken) {
+      title.textContent = 'Neues Passwort';
+      lead.textContent = 'Mindestens 10 Zeichen. Der Link funktioniert nur einmal.';
+      showOnly('reset');
+      return;
+    }
+    var session = ZeusAuth.readSession();
+    if (session) {
+      try {
+        var data = await ZeusAuth.call({ action: 'session', token: session.token });
+        if (data.ok) {
+          if (data.expiresAt) ZeusAuth.writeSession({ token: session.token, expiresAt: data.expiresAt });
+          title.textContent = 'Angemeldet';
+          lead.textContent = 'Die Übersicht und das Passwort.';
+          showOnly('account');
+          if (wantPassword) document.getElementById('oldPassword').focus();
+          return;
+        }
+        ZeusAuth.clearSession();
+      } catch (err) {
+        say(err.code || 'unreachable');
+      }
+    }
+    if (new URLSearchParams(location.search).get('offline') === '1') say('unreachable');
+    showOnly('login');
+  }
+  window.addEventListener('hashchange', function () { init(); });
+  init();
+})();
+</script>
+</body>
+</html>
