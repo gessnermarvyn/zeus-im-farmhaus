@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex">
+<meta name="referrer" content="no-referrer">
+<title>Stornieren · Zeus im Farmhaus</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;1,500&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--cream:#FFFBF5;--navy:#263149;--green:#E5F7AF;--olive:#5E7039;--muted:#5C6474;--line:#E4E0D4}
+*{box-sizing:border-box;margin:0;padding:0}
+body{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:32px 18px;background:var(--cream);color:var(--navy);font-family:Inter,system-ui,sans-serif;line-height:1.55}
+.card{width:min(480px,100%)}
+.eyebrow{font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;color:var(--olive);font-weight:500}
+h1{font-family:"Cormorant Garamond",Georgia,serif;font-weight:500;font-size:clamp(2.2rem,6vw,3rem);line-height:1.05;margin:.4rem 0 .8rem}
+p{margin:.55rem 0}
+dl{display:grid;grid-template-columns:auto 1fr;gap:.3rem 1rem;margin:1rem 0}
+dt{color:var(--muted)}
+button{width:100%;margin-top:1rem;background:var(--navy);color:var(--cream);border:0;padding:.95rem 1rem;letter-spacing:.14em;text-transform:uppercase;font-size:.74rem;font-weight:500;cursor:pointer;font-family:inherit}
+button:hover{background:var(--olive)}
+button:disabled{opacity:.6;cursor:wait}
+.note{margin-top:1rem;padding:.9rem 1rem;background:#fff;border:1px solid var(--olive)}
+.back{margin-top:1.6rem;font-size:.85rem}
+.back a{color:var(--muted)}
+</style>
+</head>
+<body>
+<main class="card">
+ <p class="eyebrow">Zeus im Farmhaus</p>
+ <h1 id="title">Reservierung</h1>
+ <p id="lead"></p>
+ <dl id="facts" hidden></dl>
+ <p class="note" id="note" hidden></p>
+ <button type="button" id="go" hidden>Stornieren</button>
+ <p class="back"><a href="./">Zur Website</a></p>
+</main>
+<script src="js/auth-config.js"></script>
+<script src="js/auth.js"></script>
+<script>
+(function () {
+  var COPY = {
+    de: {title:'Reservierung stornieren', missing:'Dieser Link ist ungültig oder abgelaufen.', late:'Die Frist ist vorbei. Bitte rufen Sie uns an: 05483 749534.', done:'Die Reservierung ist storniert. Der Tisch ist wieder frei.', already:'Diese Reservierung war schon storniert.', button:'Stornieren', date:'Datum', time:'Uhrzeit', guests:'Personen', table:'Tisch', rule:'Bis 6 Personen bis 24 Stunden vorher, größere Gruppen bis 2 Tage vorher.', down:'Die Stornierung ist gerade nicht erreichbar. Bitte rufen Sie an: 05483 749534.'},
+    en: {title:'Cancel reservation', missing:'This link is invalid or has expired.', late:'The deadline has passed. Please call us: +49 5483 749534.', done:'The reservation is cancelled and the table is free again.', already:'This reservation was already cancelled.', button:'Cancel reservation', date:'Date', time:'Time', guests:'Guests', table:'Table', rule:'Up to 6 guests: until 24 hours before. Larger parties: at least 2 days before.', down:'Cancellation is unavailable just now. Please call +49 5483 749534.'},
+    el: {title:'Ακύρωση κράτησης', missing:'Ο σύνδεσμος δεν ισχύει ή έληξε.', late:'Η προθεσμία πέρασε. Καλέστε μας: +49 5483 749534.', done:'Η κράτηση ακυρώθηκε και το τραπέζι είναι ξανά ελεύθερο.', already:'Αυτή η κράτηση ήταν ήδη ακυρωμένη.', button:'Ακύρωση', date:'Ημερομηνία', time:'Ώρα', guests:'Άτομα', table:'Τραπέζι', rule:'Έως 6 άτομα: μέχρι 24 ώρες πριν. Μεγαλύτερες παρέες: τουλάχιστον 2 ημέρες πριν.', down:'Η ακύρωση δεν είναι διαθέσιμη αυτή τη στιγμή. Καλέστε το +49 5483 749534.'}
+  };
+  var title = document.getElementById('title');
+  var lead = document.getElementById('lead');
+  var facts = document.getElementById('facts');
+  var note = document.getElementById('note');
+  var go = document.getElementById('go');
+  var token = '';
+  var lang = 'de';
+  function t() { return COPY[lang] || COPY.de; }
+  function say(text) { note.hidden = false; note.textContent = text; }
+  function show(booking) {
+    lang = booking.lang === 'en' || booking.lang === 'el' ? booking.lang : 'de';
+    document.documentElement.lang = lang === 'el' ? 'el' : lang;
+    title.textContent = t().title;
+    var when = booking.date + ' · ' + booking.time;
+    lead.textContent = booking.name + ' · ' + when;
+    facts.hidden = false;
+    var rows = [[t().date, booking.date],[t().time, booking.time],[t().guests, String(booking.persons)],[t().table, booking.tables || '–']];
+    facts.innerHTML = rows.map(function (r) { return '<dt>' + r[0] + '</dt><dd>' + String(r[1]).replace(/</g,'') + '</dd>'; }).join('');
+    go.textContent = t().button;
+    if (booking.status === 'storniert') { go.hidden = true; say(t().already); return; }
+    if (!booking.canCancel) { go.hidden = true; say(t().late); return; }
+    say(t().rule);
+    go.hidden = false;
+  }
+  go.onclick = async function () {
+    go.disabled = true;
+    try {
+      var data = await ZeusAuth.call({ action: 'cancel', token: token });
+      if (data.ok && data.booking) show(data.booking);
+      if (data.ok) { go.hidden = true; say(data.already ? t().already : t().done); }
+      else if (data.booking) { show(data.booking); if (data.error === 'late') say(t().late); }
+      else say(data.error === 'rate_limited' ? t().down : t().missing);
+    } catch (e) { say(t().down); }
+    finally { go.disabled = false; }
+  };
+  async function init() {
+    var found = (location.hash || '').match(/^#([A-Za-z0-9_-]{20,})$/);
+    if (!found) { say(t().missing); return; }
+    token = found[1];
+    history.replaceState(null, '', location.pathname + location.search);
+    if (!ZeusAuth.configured()) { say(t().down); return; }
+    try {
+      var data = await ZeusAuth.call({ action: 'cancel-info', token: token });
+      if (!data.ok || !data.booking) { say(t().missing); return; }
+      show(data.booking);
+    } catch (e) { say(t().down); }
+  }
+  init();
+})();
+</script>
+</body>
+</html>

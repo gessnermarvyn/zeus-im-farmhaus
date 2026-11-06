@@ -43,9 +43,9 @@ th,td{padding:.8rem 1rem;text-align:left;border-bottom:1px solid var(--line)}th{
 .slots{display:flex;gap:4px;align-items:flex-end;height:90px;margin:1rem 0 2.5rem}.slots div{flex:1;background:var(--navy);opacity:.85;position:relative}.slots span{position:absolute;bottom:-1.4rem;left:50%;transform:translateX(-50%);font-size:.62rem;color:var(--muted);white-space:nowrap}
 @media(max-width:800px){.kpis{grid-template-columns:1fr 1fr}.days{grid-template-columns:repeat(4,1fr)}table{font-size:.82rem}th:nth-child(5),td:nth-child(5){display:none}}
 </style></head><body>
-<div class="top"><div class="wrap"><h1>Zeus <i>im Farmhaus</i> · Wirt-Übersicht</h1><div class="top-actions"><a href="intern.html#passwort">Passwort ändern</a><button type="button" id="logoutBtn">Abmelden</button><span class="badge">Demo · Beispieldaten</span></div></div></div>
+<div class="top"><div class="wrap"><h1>Zeus <i>im Farmhaus</i> · Wirt-Übersicht</h1><div class="top-actions"><a href="intern.html#passwort">Passwort ändern</a><button type="button" id="logoutBtn">Abmelden</button><span class="badge" id="wirtBadge">…</span></div></div></div>
 <div class="wrap">
-<div class="note"><b>Beispieldaten – Demo.</b> Alle Namen und Reservierungen auf dieser Seite sind erfunden und dienen nur zur Veranschaulichung. Im echten Betrieb würden hier die Online-Anfragen aus dem Reservierungsformular erscheinen (z. B. aus einer Google-Tabelle oder einem Reservierungsdienst). Tischnummern werden automatisch zugeteilt (16 Tische à 4 Plätze, Belegung ca. 2,5 Std.) und lassen sich in der Tabelle per Klick ändern. <a href="./">← zurück zur Vorschau</a></div>
+<div class="note" id="wirtNote">Die Reservierungen werden geladen.</div>
 <h2 style="font-size:2.2rem">Diese Woche</h2>
 <div class="days" id="days"></div>
 <h2 style="font-size:2rem" id="dTitle"></h2>
@@ -53,35 +53,37 @@ th,td{padding:.8rem 1rem;text-align:left;border-bottom:1px solid var(--line)}th{
 <h3 style="font-size:1.4rem">Ankünfte nach Uhrzeit (Gäste)</h3>
 <div class="slots" id="slots"></div>
 <h3 style="font-size:1.4rem">Tischplan – frei / belegt</h3><div id="plan" style="display:flex;flex-wrap:wrap;gap:.4rem;margin-bottom:1.5rem"></div><table><thead><tr><th>Uhrzeit</th><th>Name</th><th>Gäste</th><th>Tisch-Nr.</th><th>Notiz</th><th>Status</th></tr></thead><tbody id="rows"></tbody></table>
-<p style="font-size:.8rem;color:var(--muted);margin:2rem 0 4rem">Demo-Seite · nur nach Anmeldung · Beispieldaten</p>
+<p style="font-size:.8rem;color:var(--muted);margin:2rem 0 4rem" id="wirtFoot">Nur nach Anmeldung</p>
 </div>
 <script>
-const names=["Familie Becker","Müller","Schröder (Radgruppe)","Kowalski","Hoffmann","Papadopoulos","Wagner","Meyer","Schulz","Fischer","Weber","Krüger","Neumann","Lange","Brandt","Vogel","Dimitriou","Kaiser"];
-const notes=["Kinderstuhl","Terrasse, wenn möglich","Geburtstag 🎂","vegetarisch","","","Fensterplatz","","Radfahrer – Räder abstellen?",""];
-function rnd(seed){let x=seed;return()=>(x=(x*9301+49297)%233280)/233280}
+let ROWS=[],TABLES=['1','2','3','4','5','6','7','8','9','10','11','12','13','14','15','16'],DUR=150;
 const days=document.getElementById('days');const base=new Date();base.setHours(12,0,0,0);
 const week=[...Array(7)].map((_,i)=>{const d=new Date(base);d.setDate(d.getDate()+i);return d});
-function data(d){if(d.getDay()===2)return[];const r=rnd(d.getDate()*31+d.getMonth());const wk=[5,6,0].includes(d.getDay());const n=Math.round((wk?11:5)+r()*6);
- const L=[...Array(n)].map(()=>{const m=17*60+30+Math.floor(r()*19)*15;const g=1+Math.floor(r()*(r()>.85?8:4));return{t:String(m/60|0).padStart(2,'0')+':'+String(m%60).padStart(2,'0'),name:names[Math.floor(r()*names.length)],g,tab:Math.ceil(g/4),note:notes[Math.floor(r()*notes.length)],st:r()>.25?'bestätigt':'offen'}}).sort((a,b)=>a.t.localeCompare(b.t));return assign(L)}
-const NT=16,DUR=150;const mins=t=>{const[h,m]=t.split(':').map(Number);return h*60+m};
-function assign(L){const out=[],busy=Array(NT+1).fill(0);for(const r of L){const s=mins(r.t),k=Math.ceil(r.g/4);let st=0;
- for(let a=1;a+k-1<=NT&&!st;a++){let ok=1;for(let j=a;j<a+k;j++)if(busy[j]>s)ok=0;if(ok)st=a}
- if(!st)continue;for(let j=st;j<st+k;j++)busy[j]=s+DUR;r.tab=k;r.tn=k>1?st+'–'+(st+k-1):''+st;out.push(r)}return out}
-const edits={};
+const iso=d=>d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+const mins=t=>{const[h,m]=String(t||'0:0').split(':').map(Number);return h*60+m};
+function expand(label){const ids=[];String(label||'').replace(/Tisch/gi,'').split(/[,/]/).forEach(part=>{const range=part.trim().match(/^(\d+)\s*[–\-]\s*(\d+)$/);if(range){const a=+range[1],b=+range[2];for(let i=Math.min(a,b);i<=Math.max(a,b);i++)ids.push(String(i));}else{const one=part.trim().match(/(\d+)/);if(one)ids.push(one[1]);}});return ids}
 const fmt=(d,o)=>d.toLocaleDateString('de-DE',o);
-function show(i){const d=week[i],rs=data(d);document.querySelectorAll('.day').forEach((e,j)=>e.classList.toggle('on',i===j));
+function rowsFor(d,all){const key=iso(d);return ROWS.filter(r=>r.date===key&&(all||r.status!=='storniert')).sort((a,b)=>String(a.time).localeCompare(String(b.time)))}
+function show(i){const d=week[i],active=rowsFor(d,false),all=rowsFor(d,true);document.querySelectorAll('.day').forEach((e,j)=>e.classList.toggle('on',i===j));
  document.getElementById('dTitle').textContent=fmt(d,{weekday:'long',day:'numeric',month:'long'});
- const g=rs.reduce((s,r)=>s+r.g,0),t=rs.reduce((s,r)=>s+r.tab,0),o=rs.filter(r=>r.st==='offen').length;
- document.getElementById('kpis').innerHTML=`<div class="kpi"><b>${rs.length}</b><span>Reservierungen</span></div><div class="kpi"><b>${g}</b><span>Gäste gesamt</span></div><div class="kpi"><b>${t}</b><span>Tische belegt</span></div><div class="kpi"><b>${o}</b><span>Noch zu bestätigen</span></div>`;
- const now=Math.max(...[1050,...rs.map(r=>mins(r.t))].filter(m=>m<=1200)),occ={};rs.forEach(r=>{const s0=mins(r.t);if(s0<=1200&&s0+DUR>1200){const[a,b]=r.tn.split('–').map(Number);for(let j=a;j<=(b||a);j++)occ[j]=r.name}});
- document.getElementById('plan').innerHTML=rs.length?[...Array(NT)].map((_,i)=>{const n=i+1,o=occ[n];return`<div title="${o?'belegt: '+o:'frei'}" style="min-width:3.2rem;text-align:center;padding:.45rem .3rem;border-radius:8px;font-weight:600;${o?'background:#263149;color:#FFFBF5':'background:#E5F7AF;color:#263149;border:1px solid #5E7039'}">${n}<br><small style="font-weight:400">${o?'belegt':'frei'}</small></div>`}).join('')+'<p style="width:100%;font-size:.8rem;color:#5C6474;margin:.3rem 0 0">Stand 20:00 Uhr</p>':'';
- const slots={};for(let m=1050;m<=1320;m+=30)slots[m]=0;rs.forEach(r=>{const[h,mi]=r.t.split(':').map(Number);const m=h*60+mi;slots[m-(m-1050)%30]+=r.g});const mx=Math.max(1,...Object.values(slots));
+ const g=active.reduce((s,r)=>s+Number(r.persons||0),0),used=new Set(active.flatMap(r=>expand(r.tables))),cancelled=all.filter(r=>r.status==='storniert').length;
+ document.getElementById('kpis').innerHTML=`<div class="kpi"><b>${active.length}</b><span>Reservierungen</span></div><div class="kpi"><b>${g}</b><span>Gäste gesamt</span></div><div class="kpi"><b>${used.size}</b><span>Tische belegt</span></div><div class="kpi"><b>${cancelled}</b><span>Storniert</span></div>`;
+ const occ={};active.forEach(r=>{const s0=mins(r.time);if(s0<=1200&&s0+DUR>1200)expand(r.tables).forEach(id=>{occ[id]=r.name})});
+ document.getElementById('plan').innerHTML=TABLES.map(n=>{const o=occ[n];return `<div title="${o?'belegt: '+o:'frei'}" style="min-width:3.2rem;text-align:center;padding:.45rem .3rem;border-radius:8px;font-weight:600;${o?'background:#263149;color:#FFFBF5':'background:#E5F7AF;color:#263149;border:1px solid #5E7039'}">${n}<br><small style="font-weight:400">${o?'belegt':'frei'}</small></div>`}).join('')+'<p style="width:100%;font-size:.8rem;color:#5C6474;margin:.3rem 0 0">Stand 20:00 Uhr</p>';
+ const slots={};for(let m=1050;m<=1320;m+=30)slots[m]=0;active.forEach(r=>{const m=mins(r.time);const bucket=1050+Math.floor((m-1050)/30)*30;if(slots[bucket]!=null)slots[bucket]+=Number(r.persons||0)});const mx=Math.max(1,...Object.values(slots));
  document.getElementById('slots').innerHTML=Object.entries(slots).map(([m,v])=>`<div style="height:${Math.max(3,v/mx*100)}%" title="${v} Gäste"><span>${String(m/60|0).padStart(2,'0')}:${String(m%60).padStart(2,'0')}</span></div>`).join('');
- document.getElementById('rows').innerHTML=rs.length?rs.map(r=>`<tr><td>${r.t}</td><td>${r.name}</td><td>${r.g}</td><td><input value="Tisch ${edits[d.toDateString()+r.t+r.name]||r.tn}" data-k="${d.toDateString()+r.t+r.name}" onchange="edits[this.dataset.k]=this.value.replace(/^Tisch\\s*/,'')" style="width:7.5rem;font:inherit;font-weight:600;color:#263149;background:#E5F7AF;border:1px solid #5E7039;border-radius:6px;padding:.2rem .45rem"></td><td>${r.note}</td><td><span class="st ${r.st==='offen'?'open':''}">${r.st}</span></td></tr>`).join(''):'<tr><td colspan="6">Dienstag – Ruhetag</td></tr>';}
-week.forEach((d,i)=>{const rs=data(d),g=rs.reduce((s,r)=>s+r.g,0),b=document.createElement('button');b.className='day'+(d.getDay()===2?' closed':'');
- b.innerHTML=`<small>${fmt(d,{weekday:'short',day:'numeric',month:'numeric'})}</small><b>${d.getDay()===2?'Ruhetag':g+' Gäste'}</b><div class="bar"><i style="width:${Math.min(100,g/60*100)}%"></i></div>`;
- if(d.getDay()!==2)b.onclick=()=>show(i);days.append(b)});
-show(week[0].getDay()===2?1:0);
+ const empty=d.getDay()===2?'Dienstag – Ruhetag':'Keine Reservierungen';
+ document.getElementById('rows').innerHTML=all.length?all.map(r=>`<tr><td>${r.time}</td><td>${escapeHtml(r.name)}</td><td>${r.persons}</td><td><input value="${escapeHtml(r.tables||'')}" data-id="${escapeHtml(r.id)}" style="width:7.5rem;font:inherit;font-weight:600;color:#263149;background:#E5F7AF;border:1px solid #5E7039;border-radius:6px;padding:.2rem .45rem"></td><td>${escapeHtml(r.message||'')}</td><td><span class="st ${r.status==='storniert'?'open':''}">${escapeHtml(r.status||'')}</span></td></tr>`).join(''):`<tr><td colspan="6">${empty}</td></tr>`;
+ document.querySelectorAll('#rows input').forEach(input=>input.onchange=()=>window.saveWirtTable&&window.saveWirtTable(input.dataset.id,input.value));}
+function escapeHtml(s){return String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function boot(payload){ROWS=payload.rows||[];if(payload.tables&&payload.tables.length)TABLES=payload.tables.map(String);DUR=payload.seatMinutes||150;
+ document.getElementById('wirtBadge').textContent='Live';
+ document.getElementById('wirtNote').innerHTML='<b>Online-Reservierungen.</b> Die Einträge kommen aus dem Formular auf der Website. Eine Belegung rechnet mit etwa '+(DUR/60).toFixed(1).replace('.',',')+' Stunden. Tischnummern lassen sich in der Tabelle ändern. <a href="./">← zur Website</a>';
+ days.innerHTML='';
+ week.forEach((d,i)=>{const rs=rowsFor(d,false),g=rs.reduce((s,r)=>s+Number(r.persons||0),0),b=document.createElement('button');b.className='day'+(d.getDay()===2?' closed':'');
+  b.innerHTML=`<small>${fmt(d,{weekday:'short',day:'numeric',month:'numeric'})}</small><b>${d.getDay()===2?'Ruhetag':g+' Gäste'}</b><div class="bar"><i style="width:${Math.min(100,g/40*100)}%"></i></div>`;
+  if(d.getDay()!==2)b.onclick=()=>show(i);days.append(b)});
+ show(week[0].getDay()===2?1:0)}
 </script>
 <script src="js/auth.js"></script>
 <script>
@@ -97,10 +99,23 @@ show(week[0].getDay()===2?1:0);
       return;
     }
     if (data.expiresAt) ZeusAuth.writeSession({ token: session.token, expiresAt: data.expiresAt });
+    var list = await ZeusAuth.call({ action: 'reservations', token: session.token });
     document.documentElement.classList.remove('locked');
+    if (!list.ok) document.getElementById('wirtNote').textContent = 'Die Reservierungen konnten nicht geladen werden.';
+    else boot(list);
   } catch (e) {
     location.replace('intern.html?offline=1');
   }
+  window.saveWirtTable = async function (id, value) {
+    var current = ZeusAuth.readSession();
+    if (!current || !id) return;
+    try {
+      var saved = await ZeusAuth.call({ action: 'set-tables', token: current.token, id: id, tables: value });
+      if (!saved.ok) document.getElementById('wirtNote').textContent = 'Diese Tischnummer konnte nicht gespeichert werden.';
+    } catch (err) {
+      document.getElementById('wirtNote').textContent = 'Die Tischnummer konnte nicht gespeichert werden.';
+    }
+  };
   document.getElementById('logoutBtn').onclick = async function () {
     var current = ZeusAuth.readSession();
     try { if (current) await ZeusAuth.call({ action: 'logout', token: current.token }); } catch (err) {}
