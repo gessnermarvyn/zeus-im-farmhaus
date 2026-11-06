@@ -2,7 +2,7 @@
 
 Die Website liegt statisch auf GitHub Pages. Ein Passwort im Seitenquelltext wäre kein Schutz. Die Anmeldung läuft deshalb über ein Google-Apps-Script an einer privaten Google-Tabelle. Solange in `js/auth-config.js` keine Adresse steht, zeigt die Seite nur den Hinweis, dass die Anmeldung noch nicht aktiv ist.
 
-Dieselbe Adresse `OWNER_EMAIL` ist später der Empfänger für Reservierungen. Das Blatt `Reservierungen` wird beim Einrichten angelegt. Der Versand der Reservierungen ist noch nicht angeschlossen.
+Dieselbe Adresse `OWNER_EMAIL` bekommt jede neue Reservierung und jede Stornierung. Das Blatt `Reservierungen` speichert die Buchungen. Solange in `js/auth-config.js` keine `BACKEND_URL` steht, schickt das Formular nichts ab und bittet zum Telefon.
 
 ## Was das Skript tut
 
@@ -12,6 +12,10 @@ Dieselbe Adresse `OWNER_EMAIL` ist später der Empfänger für Reservierungen. D
 - Passwort ändern verlangt das alte Passwort und bleibt nur mit gültiger Sitzung möglich
 - Passwort vergessen schickt einen einmaligen Link an `OWNER_EMAIL`, eine Stunde gültig
 - Nach 5 falschen Passwörtern in 15 Minuten pausiert die Anmeldung; der Zurücksetzen-Link höchstens 3 Mal pro Stunde
+- Reservierung speichert Name, Telefon, E-Mail, Datum, Uhrzeit, Personen, Nachricht, Tisch und Sprache. Das Token für den Storno-Link liegt nur als SHA-256 in der Tabelle
+- Der Gast bekommt die Bestätigung auf Deutsch, Englisch oder Griechisch, je nach Sprache der Website. Stornieren geht über `storno.html`: bis 6 Personen bis 24 Stunden vorher, darüber bis 2 Tage vorher
+- Ein verstecktes Feld und ein Limit (8 Anfragen pro Stunde, 3 pro E-Mail-Adresse) halten automatische Einsendungen klein
+- Die Wirt-Übersicht liest die echten Zeilen, sobald eine Sitzung besteht. Ohne Anmeldung bleibt sie zu
 
 ## Einrichten
 
@@ -24,6 +28,7 @@ Dieselbe Adresse `OWNER_EMAIL` ist später der Empfänger für Reservierungen. D
    | `OWNER_EMAIL` | die Adresse des Wirts, z. B. später auch für Reservierungen |
    | `SITE_URL` | `https://gessnermarvyn.github.io/zeus-im-farmhaus/intern.html` |
    | `INITIAL_PASSWORD` | das erste Passwort, mindestens 10 Zeichen |
+   | `TABLES` | optional, z. B. `1:4,2:4,3:4`. Leer bedeutet 16 Tische mit je 4 Plätzen, Belegung 150 Minuten |
 
    `INITIAL_PASSWORD` nur hier eintragen, nicht in die Website und nicht ins Repository.
 
@@ -50,11 +55,15 @@ window.ZEUS_AUTH = {
 - `wirt.html` leitet ohne Sitzung auf die Anmeldung um.
 - Falsches Passwort bleibt falsch. Nach fünf Versuchen kommt die Pause.
 - „Passwort vergessen“ schickt den Link. „Passwort ändern“ verlangt das alte Passwort.
+- Mit gesetzter `BACKEND_URL` speichert eine Probereservierung eine Zeile, schickt die Mail an den Gast und an `OWNER_EMAIL`, und der Link in der Mail storniert nur innerhalb der Frist.
+- Ohne `BACKEND_URL` bleibt unter dem Formular der Hinweis, telefonisch zu reservieren.
+
+Nach Änderungen an `Code.gs` die Web-App neu bereitstellen (Bereitstellungen → verwalten → neue Version), sonst läuft der alte Stand.
 
 Die Anmeldung kann ein paar Sekunden dauern. Das ist die Absicht der vielen Hash-Runden.
 
 ## Grenze dieser Lösung
 
-GitHub Pages liefert `wirt.html` weiterhin als Datei aus. Ohne gültige Sitzung leitet der Browser um, bevor die Seite sichtbar wird. Solange dort nur Beispieldaten stehen, ist das in Ordnung. Echte Reservierungen dürfen nicht in die HTML-Datei, sondern nur in das Blatt `Reservierungen`, und nur nach geprüfter Sitzung zurück an den Browser.
+GitHub Pages liefert `wirt.html` weiterhin als Datei aus. Ohne gültige Sitzung leitet der Browser um, bevor die Seite sichtbar wird. Die Buchungen selbst stehen nur im Blatt `Reservierungen` und kommen in die Übersicht erst nach geprüfter Sitzung.
 
 Zum Passwortwechsel im laufenden Betrieb „Passwort ändern“ nutzen. `setupOwner` überschreibt den Hash, wenn `INITIAL_PASSWORD` erneut gesetzt und die Funktion noch einmal ausgeführt wird. Dabei werden die Sitzungen gelöscht.
